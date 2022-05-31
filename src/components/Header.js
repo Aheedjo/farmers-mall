@@ -1,15 +1,13 @@
-import { MenuRounded } from "@mui/icons-material";
-import { AppBar, Button, Divider, Drawer, Hidden, IconButton, List, ListItem, Toolbar, Typography } from "@mui/material";
+import { KeyboardArrowDownRounded, KeyboardArrowUpRounded } from "@mui/icons-material";
+import { AppBar, Button, Drawer, Grid, InputAdornment, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
 import { styled } from "@mui/system";
-import { useState } from "react";
+import { Form, Formik } from "formik";
+import React, { useState } from "react";
+import FormikField from "./FormikField";
 import Link from './Link';
 
 const Root = styled('div')(({ theme }) => ({
   
-}));
-
-const FlexGrow = styled('div')(({ theme }) => ({
-  flexGrow: 1,
 }));
 
 const Bar = styled(AppBar)(({ theme }) => ({
@@ -32,9 +30,7 @@ const Bar = styled(AppBar)(({ theme }) => ({
     ...theme.mixins.toolbar,
   },
   '& .toolbar': {
-    display: 'flex',
-    alignItems: 'center',
-    padding: '.8rem 6rem',
+    padding: '.3rem 6rem',
     [theme.breakpoints.down('sm')]: {
       padding: '.8rem 1rem',
     },
@@ -43,6 +39,10 @@ const Bar = styled(AppBar)(({ theme }) => ({
       padding: '1.5rem 3rem',
     },
 
+    '& .right': {
+      display: 'flex',
+      alignItems: 'center',
+    },
     '& .brand': {
       display: 'inline-flex',
       alignItems: 'center',
@@ -96,46 +96,82 @@ const Bar = styled(AppBar)(({ theme }) => ({
       [theme.breakpoints.only('sm')]: {
         width: '40%',
       },
+    },
+    '& .searchContainer': {
+      width: '100%',
+      paddingRight: '2rem',
+
+      '& .field': {
+        width: '100%',
+        '& .MuiOutlinedInput-root': {
+          '& fieldset': {
+            borderColor: theme.palette.primary.main,
+          },
+          '&:hover fieldset': {
+            borderColor: theme.palette.primary.main,
+          },
+          '&.Mui-focused fieldset': {
+            borderColor: theme.palette.primary.main,
+          },
+        },
+      },
+      '& .field input': {
+        padding: '1rem'
+      },
+      '& .searchPathBtn': {
+        textTransform: 'none'
+      },
+      '& .startAdornment': {
+        '&.MuiInputAdornment-root': {
+          margin: 0,
+          padding: 0,
+        }
+      }
     }
   }
 }));
 
-const MenuDrawer = styled(Drawer)(({ theme }) => ({
-  width: 'auto',
-  
-  '& .inner': {
-    background: theme.palette.background,
-  },
-  '& .divider': {
-    margin: '1rem 0',
-  },
-  '& .btn': {
-    textTransform: 'none',
-    fontWeight: 600,
-    boxShadow: 'none',
-    padding: '.8rem 2rem',
-    borderRadius: '8px',
-    fontSize: '1rem'
-  },
-  '& .link': {
-    color: theme.colors.textSubtile,
-    fontWeight: 500,
-    transition: '.2s ease',
+const SearchDropdown = () => {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [title, setTitle] = useState('Products');
+  const open = Boolean(anchorEl);
 
-    '&:hover': {
-      transition: '.2s ease',
-      color: theme.palette.secondary.main
-    },
-    '&.active': {
-      transition: '.2s ease',
-      color: theme.palette.primary.dark
-    }
-  },
-}));
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleClicked = (newTitle) => {
+    setTitle(newTitle)
+    handleClose();
+  };
+
+  return (
+    <div>
+      <Button
+        onClick={handleClick}
+        className="searchPathBtn"
+        endIcon={open ? <KeyboardArrowUpRounded/> : <KeyboardArrowDownRounded/>}
+      >
+        {title}
+      </Button>
+      <Menu
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+      >
+        <MenuItem onClick={() => handleClicked('Products')}>Products</MenuItem>
+        <MenuItem onClick={() => handleClicked('Farms')}>Farms</MenuItem>
+        <MenuItem onClick={() => handleClicked('Articles')}>Articles</MenuItem>
+      </Menu>
+    </div>
+  );
+};
 
 const Header = () => {
-  const [drawerOpen, setDrawerOpen] = useState(false);
-
   return (
     <Root>
       <Bar position="fixed" elevation={10}>
@@ -147,82 +183,63 @@ const Header = () => {
         </div>
 
         <Toolbar className="toolbar">
-          <Link href="/" className="brand">
-            <img src="/imgs/logo.svg" className="logo" alt="Logo"/>
-          </Link>
-          
-          <Hidden smDown>
-            <FlexGrow/>
-          </Hidden>
-
-          <Hidden mdDown>
-            <div className="links">
-              <Link href="/cart" className="link">
-                <img src="/imgs/cart.svg" alt="Cart" className="icon"/>
-                <Typography variant="body1">Cart</Typography>
+          <Grid container alignItems="center">
+            <Grid item xs={12} md={2}>
+              <Link href="/" className="brand">
+                <img src="/imgs/logo.svg" className="logo" alt="Logo"/>
               </Link>
+            </Grid>
 
-              <Link href="/favorites" className="link">
-                <img src="/imgs/heart.svg" alt="Cart" className="icon"/>
-                <Typography variant="body1">Favorites</Typography>
-              </Link>
-
-              <Link href="/login" label="Login" className="link"/>
-              <Link href="/register" label="Register" className="link"/>
-            </div>
-          </Hidden>
-
-          <Hidden smDown>
-            <Button 
-              variant="contained" 
-              color="primary" 
-              className="btn"
-            >
-              Own a Store
-            </Button>
-          </Hidden>
-
-          <Hidden lgUp>
-            <FlexGrow/>
-            <IconButton color="secondary" size="large" onClick={() => setDrawerOpen(true)}>
-              <MenuRounded fontSize="large"/>
-            </IconButton>
-
-            <MenuDrawer anchor="bottom" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
-              <div className="inner">
-                <List>
-                  <ListItem button onClick={() => setDrawerOpen(false)}>
-                    <Link href="/about" label="About" className="link stretch"/>
-                  </ListItem>
-                  <ListItem button>
-                    <Link href="/programs" label="Programs" className="link stretch"/>
-                  </ListItem>
-                  <ListItem button>
-                    <Link href="/projects" label="Projects" className="link stretch"/>
-                  </ListItem>
-                  <ListItem button>
-                    <Link href="/excos" label="Excos" className="link stretch"/>
-                  </ListItem>
-
-                  <Hidden smUp>
-                    <Divider className="divider"/>
-
-                    <ListItem>
-                      <Button 
-                        variant="contained" 
-                        color="secondary" 
-                        className="btn"
-                        fullWidth
-                        href="/register"
-                      >
-                        Register
-                      </Button>
-                    </ListItem>
-                  </Hidden>
-                </List>
+            <Grid item xs={12} md={5}>
+              <div className="searchContainer">
+                <Formik
+                  initialValues={{
+                    search: ''
+                  }}
+                >
+                  <Form>
+                    <FormikField
+                      name="search"
+                      variant="outlined"
+                      //label="Search for products and Stores"
+                      color="primary"
+                      className="field"
+                      InputProps={{ 
+                        startAdornment: <InputAdornment className="startAdornment" position="start"><SearchDropdown/></InputAdornment>
+                      }}
+                    />
+                  </Form>
+                </Formik>
               </div>
-            </MenuDrawer>
-          </Hidden>
+            </Grid>
+
+            <Grid item xs={12} md={5}>
+              <div className="right">
+                <div className="links">
+                  <Link href="/cart" className="link">
+                    <img src="/imgs/cart.svg" alt="Cart" className="icon"/>
+                    <Typography variant="body1">Cart</Typography>
+                  </Link>
+
+                  <Link href="/favorites" className="link">
+                    <img src="/imgs/heart.svg" alt="Cart" className="icon"/>
+                    <Typography variant="body1">Favorites</Typography>
+                  </Link>
+
+                  <Link href="/login" label="Login" className="link"/>
+                  <Link href="/register" label="Register" className="link"/>
+                </div>
+
+                <Button 
+                  variant="contained" 
+                  color="primary" 
+                  className="btn"
+                >
+                  Own a Store
+                </Button>
+              </div>
+            </Grid>
+          </Grid>
         </Toolbar>
       </Bar>
 
