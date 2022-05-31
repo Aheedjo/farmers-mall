@@ -1,5 +1,5 @@
-import { KeyboardArrowDownRounded, KeyboardArrowUpRounded } from "@mui/icons-material";
-import { AppBar, Button, Drawer, Grid, InputAdornment, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
+import { KeyboardArrowDownRounded, KeyboardArrowUpRounded, MicRounded, SearchRounded } from "@mui/icons-material";
+import { AppBar, Button, Grid, IconButton, InputAdornment, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import { Form, Formik } from "formik";
 import React, { useState } from "react";
@@ -30,7 +30,7 @@ const Bar = styled(AppBar)(({ theme }) => ({
     ...theme.mixins.toolbar,
   },
   '& .toolbar': {
-    padding: '.3rem 6rem',
+    padding: '.3rem 5rem',
     [theme.breakpoints.down('sm')]: {
       padding: '.8rem 1rem',
     },
@@ -90,7 +90,7 @@ const Bar = styled(AppBar)(({ theme }) => ({
       marginLeft: '2rem',
       fontWeight: 500,
       boxShadow: 'none',
-      padding: '.4rem 1rem',
+      padding: '.4rem 1.1rem',
       borderRadius: '39px',
       fontSize: '.9rem',
       [theme.breakpoints.only('sm')]: {
@@ -171,6 +171,33 @@ const SearchDropdown = () => {
   );
 };
 
+const SearchButtons = () => {
+  const Root = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+
+    '& .searchBtn': {
+      color: theme.palette.primary.main,
+      background: '#E0FFDD',
+
+      '&.first': {
+        marginRight: '.8rem'
+      }
+    }
+  }));
+
+  return (
+    <Root>
+      <IconButton className="searchBtn first">
+        <MicRounded/>
+      </IconButton>
+      <IconButton className="searchBtn">
+        <SearchRounded/>
+      </IconButton>
+    </Root>
+  );
+};
+
 const Header = () => {
   return (
     <Root>
@@ -205,7 +232,11 @@ const Header = () => {
                       color="primary"
                       className="field"
                       InputProps={{ 
-                        startAdornment: <InputAdornment className="startAdornment" position="start"><SearchDropdown/></InputAdornment>
+                        startAdornment: <InputAdornment className="startAdornment" position="start"><SearchDropdown/></InputAdornment>,
+                        endAdornment: <InputAdornment className="startAdornment" position="end"><SearchButtons/></InputAdornment>
+                      }}
+                      inputProps={{
+                        placeholder: 'Search products and stores'
                       }}
                     />
                   </Form>
