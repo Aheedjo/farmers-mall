@@ -177,7 +177,7 @@ const SearchButtons = () => {
     alignItems: 'center',
 
     '& .searchBtn': {
-      color: theme.palette.primary.main,
+      color: theme.colors.primaryVariant,
       background: '#E0FFDD',
 
       '&.first': {

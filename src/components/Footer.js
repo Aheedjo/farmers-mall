@@ -4,12 +4,13 @@ import ExternalLink from "./ExternalLink";
 import Link from './Link';
 
 const Root = styled('div')(({ theme }) => ({
-  background: theme.colors.footerBackground,
+  background: theme.palette.primary.main,
   position: 'absolute',
   bottom: 0,
 
   '& .top': {
     padding: '3rem 5rem',
+    paddingTop: '.7rem',
     [theme.breakpoints.only('xs')]: {
       padding: '3rem 1.5rem',
     },
@@ -20,7 +21,7 @@ const Root = styled('div')(({ theme }) => ({
     },
   },
   '& .body': {
-    color: theme.colors.primaryDarkShade,
+    color: theme.colors.textLight,
     fontSize: '1.1rem',
     lineHeight: '33px',
     marginTop: '1.5rem'
@@ -45,13 +46,13 @@ const Root = styled('div')(({ theme }) => ({
     }
   },
   '& .header': {
-    fontWeight: 600,
-    color: theme.colors.textSubtile,
-    fontSize: '1.4rem',
+    fontWeight: 800,
+    color: 'white',
+    fontSize: '1.5rem',
     marginBottom: '1.5rem',
   },
   '& .copyright-container': {
-    background: theme.colors.textSubtile,
+    background: theme.colors.primaryVariant,
     marginTop: '4rem',
     padding: '.6rem 0',
 
@@ -75,14 +76,14 @@ const FooterLink = ({ href, label }) => {
       display: 'inline-block',
     },
     '& .label': {
-      color: theme.colors.textSubtile,
+      color: theme.colors.textLight,
       transition: '.2s ease',
       fontSize: '1.1rem',
       fontWeight: 500,
 
       '&:hover': {
         transition: '.2s ease',
-        color: theme.palette.secondary.main
+        color: theme.palette.primary.dark
       }
     }
   }));
@@ -100,57 +101,51 @@ const Footer = () => {
   return (
     <Root>
       <div className="top">
-        <Grid container spacing={4}>
+        <Grid container spacing={4} alignItems="baseline">
           <Grid item xs={12} sm={12} md={4} className="col1">
-            <img src="/imgs/footer_logo.png" alt="Logo" className="logo"/>
+            <img src="/imgs/footer_logo.svg" alt="Logo" className="logo"/>
             <Typography variant="h6" className="body">
-              An environment to groom  IT enthusiasts into innovative entrepreneurial IT professionals.
+              FarmersMall is an agri-commerce platform that connects relevant stakeholders in the agricultural value chain so as 
+              to facilitate seamless and effective communication and market participation in agricultural sector of the country.
             </Typography>
+          </Grid>
 
+          <Grid item xs={12} sm={6} md={3}>
+            <Typography variant="h4" className="header">Location</Typography>
+            <Typography variant="body1" className="body">
+              Fagge Local Government Area, Kano State, Nigeria
+            </Typography>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={2}>
+            <Typography variant="h4" className="header">Quick Links</Typography>
+
+            <FooterLink href="/" label="Home"/>
+            <FooterLink href="/blog" label="Blog"/>
+            <FooterLink href="/contact" label="Contact Us"/>
+          </Grid>
+
+          <Grid item xs={12} md={3}>
+            <Typography variant="h4" className="header">Follow Us</Typography>
+            
             <div className="social">
-              <ExternalLink href="https://www.facebook.com/stemcoders" className="handle">
+              <ExternalLink href="https://www.facebook.com/farmersmall" className="handle">
                 <img src="/imgs/facebook.svg" alt="Facebook" className="icon"/>
               </ExternalLink>
-              <ExternalLink href="https://twitter.com/stemcoders_abu" className="handle">
+              <ExternalLink href="https://twitter.com/farmersmall" className="handle">
                 <img src="/imgs/twitter.svg" alt="Twitter" className="icon"/>
               </ExternalLink>
-              <ExternalLink href="https://www.instagram.com/stemcoders_abu" className="handle">
+              <ExternalLink href="https://www.instagram.com/farmersmall" className="handle">
                 <img src="/imgs/instagram.svg" alt="Instagram" className="icon"/>
               </ExternalLink>
             </div>
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={2}>
-            <Typography variant="h4" className="header">Club</Typography>
-
-            <FooterLink href="/about" label="About Us"/>
-            <FooterLink href="/how" label="How it works"/>
-            <FooterLink href="/programs" label="Programs"/>
-            <FooterLink href="/terms" label="Terms"/>
-          </Grid>
-
-          <Grid item xs={12} sm={6} md={2}>
-            <Typography variant="h4" className="header">Learn</Typography>
-
-            <FooterLink href="/resources" label="Resources"/>
-            <FooterLink href="/blog" label="Blog"/>
-            <FooterLink href="/faqs" label="FAQs"/>
-          </Grid>
-
-          <Grid item xs={12} md={4}>
-            <Typography variant="h4" className="header">Get in Touch</Typography>
-            <Typography variant="h6" className="body">
-              Questions or Feedbacks? We will love to hear from you.
-              <br/>
-              stemcoders.abu@gmail.com
-            </Typography>
           </Grid>
         </Grid>
       </div>
 
       <div className="copyright-container">
         <Typography variant="h6" className="copyright">
-          &copy; {new Date().getFullYear()} STEM CODER CLUB. All rights reserved
+          &copy; {new Date().getFullYear()} FarmersMall - All rights reserved
         </Typography>
       </div>
     </Root>

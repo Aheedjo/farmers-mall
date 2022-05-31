@@ -24,7 +24,7 @@ const theme = createTheme({
     color: '#1E1E1E',
   },
   colors: {
-    textLight: '#FFFFFF',
+    textLight: '#FCFCFC',
     textDark: '#000000',
     primaryVariant: '#1A874A'
   }
