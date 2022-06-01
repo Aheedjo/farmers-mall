@@ -120,17 +120,42 @@ const Section1 = styled('div')(({ theme }) => ({
     position: 'relative',
 
     '& .title': {
-      color: theme.colors.textLight,
-      fontWeight: 500,
+      textAlign: 'center', 
+      color: 'white',
+      fontWeight: 600,
     },
-    '& .btn': {
-      background: '#FFFAFA',
-      color: theme.palette.primary.main,
-      position: 'absolute',
-      bottom: '20px',
-      left: '50%',
-      transform: 'translateX(-50%)',
-    }
+    '& .subtitle': {
+      marginTop: '1.5rem',
+      fontWeight: 600,
+      textAlign: 'center', 
+      color: 'white',
+    },
+    '& .inner': {
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center'
+    },
+    '& .btns': {
+      display: 'flex',
+      justifyContent: 'end',
+      paddingBottom: '5rem',
+      columnGap: '4rem',
+
+      '& .btnStore': {
+        background: '#FFFAFA',
+        color: theme.palette.primary.main,
+        borderRadius: '39px',
+        padding: '.2rem 1.1rem',
+      },
+      '& .btnContact': {
+        background: 'inherit',
+        color: theme.colors.textLight,
+        borderRadius: '39px',
+        padding: '.2rem 1.1rem',
+        border: `3px solid ${theme.colors.textLight}`,
+      }
+    },
   }
 }));
 
@@ -191,7 +216,42 @@ const Index = () => {
 
             <Grid item xs={12} md={6}>
               <div className='middle'>
+                <Grid container alignItems="stretch" style={{ height: '100%' }}>
+                  <Grid item md={5}></Grid>
+                  <Grid item md={7}>
+                    <div className='inner'>
+                      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                        <div style={{ paddingLeft: '8rem', paddingTop: '50%' }}>
+                          <Typography className='title' variant="h3" component="div">
+                            ARE YOU A FARMER?
+                          </Typography>
+                          <Typography className='subtitle' variant="h6" component="div">
+                            You can bring your local presence online
+                          </Typography>
+                        </div>
 
+                        <div style={{ flex: 1 }}/>
+
+                        <div className='btns'>
+                          <CustomButton 
+                            variant="contained" 
+                            color="secondary" 
+                            className="btnStore"
+                          >
+                            Own a Store
+                          </CustomButton>
+                          <CustomButton 
+                            variant="contained" 
+                            color="secondary" 
+                            className="btnContact"
+                          >
+                            Contact Us
+                          </CustomButton>
+                        </div>
+                      </div>
+                    </div>
+                  </Grid>
+                </Grid>
               </div>
             </Grid>
 
