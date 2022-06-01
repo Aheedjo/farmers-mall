@@ -2,7 +2,10 @@ import { Button, Grid, List, ListItemButton, ListItemIcon, ListItemText, Typogra
 import { styled } from '@mui/material/styles';
 import Layout from "../components/Layout";
 import CustomButton from "../components/CustomButton";
-import { KeyboardArrowRightRounded } from '@mui/icons-material';
+import { KeyboardArrowLeftRounded, KeyboardArrowRightRounded } from '@mui/icons-material';
+import Slider from "react-slick";
+import { useRef } from 'react';
+import { textAlign } from '@mui/system';
 
 const Root = styled('div')(({ theme }) => ({
   
@@ -175,7 +178,7 @@ const CategoryItem = ({ image, title }) => {
   );
 };
 
-const Carousel = ({ title, children }) => {
+const Carousel = ({ title, children, slidesToShow = 5 }) => {
   const Root = styled('div')(({ theme }) => ({
     background: 'white',
     borderRadius: '12px',
@@ -195,8 +198,61 @@ const Carousel = ({ title, children }) => {
         fontWeight: 500,
         fontSize: '1.1rem'
       }
+    },
+    '& .slider': {
+      position: 'relative',
+
+      '& .content': {
+        padding: '0 1rem',
+      },
+      '& .slideBtn': {
+        background: '#0080363B',
+        position: 'absolute',
+        height: '100%',
+        zIndex: 10000000,
+        borderRadius: '4px',
+        display: 'inline-flex',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        transition: '.2s ease',
+        cursor: 'pointer',
+        
+        '& .icon': {
+          fontSize: '3rem',
+          color: 'white'
+        },
+        '&:hover': {
+          background: 'rgba(0, 128, 54, 0.5)',
+          transition: '.2s ease',
+        },
+        '&.next': {
+          right: 0,
+          top: 0
+        }
+      }
     }
   }));
+
+  const settings = {
+    dots: false,
+    infinite: true,
+    speed: 300,
+    slidesToShow: slidesToShow,
+    slidesToScroll: 1,
+    arrows: false,
+  };
+
+  const slider = useRef(null);
+
+  const nextSlide = () => {
+    if (slider.current)
+      slider.current.slickNext();
+  };
+
+  const prevSlide = () => {
+    if (slider.current)
+      slider.current.slickPrev();
+  };
 
   return (
     <Root>
@@ -211,6 +267,52 @@ const Carousel = ({ title, children }) => {
           See more
         </Button>
       </div>
+
+      <div className='slider'>
+        <div className="slideBtn" onClick={prevSlide}>
+          <KeyboardArrowLeftRounded className='icon'/>
+        </div>
+
+        <div className="content">
+          <Slider {...settings} ref={slider}>
+            {children}
+          </Slider>
+        </div>
+
+        <div className="slideBtn next" onClick={nextSlide}>
+          <KeyboardArrowRightRounded className='icon'/>
+        </div>
+      </div>
+    </Root>
+  );
+};
+
+const CategoryCard = ({ image, title }) => {
+  const Root = styled('div')(({ theme }) => ({
+    display: 'inline',
+    width: '100%',
+    background: 'red',
+    textAlign: 'center',
+
+    '& img': {
+      width: '290px',
+      height: '290px',
+      //objectFit: 'contain',
+      padding: '0 1rem',
+    },
+    '& .title': {
+      color: '#5C615C',
+      marginTop: '.5rem',
+      marginBottom: '1rem'
+    }
+  }));
+
+  return (
+    <Root>
+      <img src={image} alt="Category"/>
+      <Typography className='title' variant="h6">
+        {title}
+      </Typography>
     </Root>
   );
 };
@@ -338,7 +440,46 @@ const Index = () => {
 
         <Section2>
           <Carousel title="Store Categories">
-
+            <CategoryCard
+              image="imgs/index4.png"
+              title="Grains farmers"
+            />
+            <CategoryCard
+              image="imgs/index5.png"
+              title="Vegetable Farmers"
+            />
+            <CategoryCard
+              image="imgs/index6.png"
+              title="Fruit Farmers"
+            />
+            <CategoryCard
+              image="imgs/index7.png"
+              title="Beverage farmers"
+            />
+            <CategoryCard
+              image="imgs/index8.png"
+              title="Legumes Farmers"
+            />
+            <CategoryCard
+              image="imgs/index4.png"
+              title="Grains farmers"
+            />
+            <CategoryCard
+              image="imgs/index5.png"
+              title="Vegetable Farmers"
+            />
+            <CategoryCard
+              image="imgs/index6.png"
+              title="Fruit Farmers"
+            />
+            <CategoryCard
+              image="imgs/index7.png"
+              title="Beverage farmers"
+            />
+            <CategoryCard
+              image="imgs/index8.png"
+              title="Legumes Farmers"
+            />
           </Carousel>
         </Section2>
       </Root>
