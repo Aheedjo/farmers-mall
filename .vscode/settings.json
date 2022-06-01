@@ -1,5 +1,7 @@
 {
   "cSpell.words": [
     "Formik"
-  ]
+  ],
+  "appService.defaultWebAppToDeploy": "/subscriptions/6a82e865-b3c6-473b-8ed4-de780638266a/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/farmers-mall",
+  "appService.deploySubpath": "build"
 }
