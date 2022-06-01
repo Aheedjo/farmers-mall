@@ -1,4 +1,4 @@
-import { Grid, List, ListItemButton, ListItemIcon, ListItemText, ListSubheader } from '@mui/material';
+import { Grid, List, ListItemButton, ListItemIcon, ListItemText, ListSubheader, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Layout from "../components/Layout";
 
@@ -13,15 +13,14 @@ const Section1 = styled('div')(({ theme }) => ({
     borderRadius: '12px',
     color: theme.colors.textLight,
     
+    '& .header': {
+      background: 'inherit',
+      color: 'white',
+      borderRadius: '12px',
+    },
     '& .list': {
       background: 'inherit',
       borderRadius: '12px',
-
-      '& .header': {
-        background: 'inherit',
-        color: 'white',
-        borderRadius: '12px',
-      }
     }
   }
 }));
@@ -34,14 +33,13 @@ const Index = () => {
           <Grid container alignItems="stretch">
             <Grid item xs={12} md={3}>
               <div className="categories">
+                <Typography className='header' variant="h6" component="div">
+                  Product Categories
+                </Typography>
+
                 <List
                   component="nav"
                   className="list"
-                  subheader={
-                    <ListSubheader component="div" className='header'>
-                      Product Categories
-                    </ListSubheader>
-                  }
                 >
                   <ListItemButton>
                     <ListItemIcon>
