@@ -1,7 +1,8 @@
-import { Grid, List, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
+import { Button, Grid, List, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Layout from "../components/Layout";
 import CustomButton from "../components/CustomButton";
+import { KeyboardArrowRightRounded } from '@mui/icons-material';
 
 const Root = styled('div')(({ theme }) => ({
   
@@ -159,6 +160,10 @@ const Section1 = styled('div')(({ theme }) => ({
   }
 }));
 
+const Section2 = styled('div')(({ theme }) => ({
+  marginTop: '2rem'
+}));
+
 const CategoryItem = ({ image, title }) => {
   return (
     <ListItemButton>
@@ -167,6 +172,46 @@ const CategoryItem = ({ image, title }) => {
       </ListItemIcon>
       <ListItemText primary={title} />
     </ListItemButton>
+  );
+};
+
+const Carousel = ({ title, children }) => {
+  const Root = styled('div')(({ theme }) => ({
+    background: 'white',
+    borderRadius: '12px',
+
+    '& .header': {
+      display: 'flex',
+      justifyContent: 'space-between',
+      padding: '1rem 1.5rem',
+
+      '& .title': {
+        color: '#258D53',
+        fontWeight: 500,
+      },
+      '& .moreBtn': {
+        color: '#258D53',
+        textTransform: 'none',
+        fontWeight: 500,
+        fontSize: '1.1rem'
+      }
+    }
+  }));
+
+  return (
+    <Root>
+      <div className="header">
+        <Typography className='title' variant="h6">{title}</Typography>
+        <Button 
+          variant="text" 
+          color="primary"
+          className="moreBtn"
+          endIcon={<KeyboardArrowRightRounded color='primary'/>}
+        >
+          See more
+        </Button>
+      </div>
+    </Root>
   );
 };
 
@@ -290,6 +335,12 @@ const Index = () => {
             </Grid>
           </Grid>
         </Section1>
+
+        <Section2>
+          <Carousel title="Store Categories">
+
+          </Carousel>
+        </Section2>
       </Root>
     </Layout>
   );
