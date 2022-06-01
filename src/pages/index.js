@@ -1,4 +1,4 @@
-import { Grid, List, ListItemButton, ListItemIcon, ListItemText, ListSubheader, Typography } from '@mui/material';
+import { Grid, List, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Layout from "../components/Layout";
 
@@ -12,11 +12,14 @@ const Section1 = styled('div')(({ theme }) => ({
     background: theme.palette.primary.main,
     borderRadius: '12px',
     color: theme.colors.textLight,
+    padding: '1rem',
     
     '& .header': {
       background: 'inherit',
       color: 'white',
       borderRadius: '12px',
+      fontWeight: 500,
+      fontSize: '1.1rem'
     },
     '& .list': {
       background: 'inherit',
