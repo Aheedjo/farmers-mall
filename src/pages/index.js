@@ -1,6 +1,7 @@
 import { Grid, List, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Layout from "../components/Layout";
+import CustomButton from "../components/CustomButton";
 
 const Root = styled('div')(({ theme }) => ({
   
@@ -55,6 +56,33 @@ const Section1 = styled('div')(({ theme }) => ({
   '& .col3': {
     width: '100%',
     height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    rowGap: '.5rem',
+  },
+  '& .plantCard': {
+    background: 'url(imgs/index1.png)',
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    width: '100%',
+    height: '100%',
+    textAlign: 'center',
+    padding: '2rem 1rem',
+    borderRadius: '12px',
+    position: 'relative',
+
+    '& .title': {
+      color: theme.colors.textLight,
+      fontWeight: 500,
+    },
+    '& .btn': {
+      background: '#FFFAFA',
+      color: theme.palette.primary.main,
+      position: 'absolute',
+      bottom: '20px',
+      left: '50%',
+      transform: 'translateX(-50%)',
+    }
   },
   '& .shopCard': {
     background: 'url(imgs/index1.png)',
@@ -65,10 +93,43 @@ const Section1 = styled('div')(({ theme }) => ({
     textAlign: 'center',
     padding: '2rem 1rem',
     borderRadius: '12px',
+    position: 'relative',
 
     '& .title': {
       color: theme.colors.textLight,
       fontWeight: 500,
+    },
+    '& .btn': {
+      background: '#FFFAFA',
+      color: theme.palette.primary.main,
+      position: 'absolute',
+      bottom: '20px',
+      left: '50%',
+      transform: 'translateX(-50%)',
+    }
+  },
+  '& .middle': {
+    background: 'url(imgs/index3.png)',
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    width: '100%',
+    height: '100%',
+    textAlign: 'center',
+    padding: '2rem 1rem',
+    borderRadius: '12px',
+    position: 'relative',
+
+    '& .title': {
+      color: theme.colors.textLight,
+      fontWeight: 500,
+    },
+    '& .btn': {
+      background: '#FFFAFA',
+      color: theme.palette.primary.main,
+      position: 'absolute',
+      bottom: '20px',
+      left: '50%',
+      transform: 'translateX(-50%)',
     }
   }
 }));
@@ -89,7 +150,7 @@ const Index = () => {
     <Layout>
       <Root>
         <Section1>
-          <Grid container alignItems="stretch">
+          <Grid container alignItems="stretch" spacing={1}>
             <Grid item xs={12} md={3}>
               <div className="categories">
                 <Typography className='header' variant="h6" component="div">
@@ -129,25 +190,42 @@ const Index = () => {
             </Grid>
 
             <Grid item xs={12} md={6}>
-              
+              <div className='middle'>
+
+              </div>
             </Grid>
 
             <Grid item xs={12} md={3}>
               <div className='col3'>
-                <Grid container flexDirection="column" style={{ height: '100%', width: '100%', background: 'yellow' }}>
-                  <Grid item md={6} style={{width: '100%', background: 'red'}}>
-                    <div className="shopCard">
-                      <img src="imgs/plant.svg" alt="Plant"/>
-                      <Typography className='title' variant="h6" component="div">
-                        Order a product even before it is harvested.
-                      </Typography>
-                    </div>
-                  </Grid>
+                <div className="plantCard">
+                  <img src="imgs/plant.svg" alt="Plant"/>
+                  <Typography className='title' variant="h6" component="div">
+                    Order a product even before it is harvested.
+                  </Typography>
 
-                  <Grid item md={6}>
-                    <div className="shopCard"></div>
-                  </Grid>
-                </Grid>
+                  <CustomButton 
+                    variant="contained" 
+                    color="secondary" 
+                    className="btn"
+                  >
+                    Shop Now
+                  </CustomButton>
+                </div>
+                
+                <div className="shopCard">
+                  <img src="imgs/shop.svg" alt="Plant"/>
+                  <Typography className='title' variant="h6" component="div">
+                    Start buying  raw and fresh foods directly from your closest farms
+                  </Typography>
+
+                  <CustomButton 
+                    variant="contained" 
+                    color="secondary" 
+                    className="btn"
+                  >
+                    Visit Sores
+                  </CustomButton>
+                </div>
               </div>
             </Grid>
           </Grid>

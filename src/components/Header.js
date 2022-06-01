@@ -29,7 +29,7 @@ const Bar = styled(AppBar)(({ theme }) => ({
     }
   },
   '& .toolbar': {
-    padding: '.3rem 5rem',
+    padding: '.3rem 3rem',
     [theme.breakpoints.down('sm')]: {
       padding: '.8rem 1rem',
     },
