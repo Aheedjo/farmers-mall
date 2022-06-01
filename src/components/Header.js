@@ -16,7 +16,7 @@ const Bar = styled(AppBar)(({ theme }) => ({
   ...theme.appBar,
   backgroundImage: 'url(/imgs/background.png)',
   backgroundSize: 'cover',
-  boxShadow: 'rgba(149, 157, 165, 0.2) 0px 0px 4px',
+  boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
 
   '& .info': {
     background: theme.colors.primaryVariant,

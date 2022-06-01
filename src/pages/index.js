@@ -51,6 +51,25 @@ const Section1 = styled('div')(({ theme }) => ({
       color: theme.colors.textLight,
       fontWeight: 500,
     }
+  },
+  '& .col3': {
+    width: '100%',
+    height: '100%',
+  },
+  '& .shopCard': {
+    background: 'url(imgs/index1.png)',
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    width: '100%',
+    height: '100%',
+    textAlign: 'center',
+    padding: '2rem 1rem',
+    borderRadius: '12px',
+
+    '& .title': {
+      color: theme.colors.textLight,
+      fontWeight: 500,
+    }
   }
 }));
 
@@ -114,7 +133,22 @@ const Index = () => {
             </Grid>
 
             <Grid item xs={12} md={3}>
-              
+              <div className='col3'>
+                <Grid container flexDirection="column" style={{ height: '100%', width: '100%', background: 'yellow' }}>
+                  <Grid item md={6} style={{width: '100%', background: 'red'}}>
+                    <div className="shopCard">
+                      <img src="imgs/plant.svg" alt="Plant"/>
+                      <Typography className='title' variant="h6" component="div">
+                        Order a product even before it is harvested.
+                      </Typography>
+                    </div>
+                  </Grid>
+
+                  <Grid item md={6}>
+                    <div className="shopCard"></div>
+                  </Grid>
+                </Grid>
+              </div>
             </Grid>
           </Grid>
         </Section1>
