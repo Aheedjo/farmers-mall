@@ -11,6 +11,7 @@ const Section1 = styled('div')(({ theme }) => ({
     height: '100%',
     background: theme.palette.primary.main,
     borderRadius: '12px',
+    color: theme.colors.textLight,
     
     '& .list': {
       background: 'inherit',
@@ -44,9 +45,9 @@ const Index = () => {
                 >
                   <ListItemButton>
                     <ListItemIcon>
-                      
+                      <img src="imgs/category_vegetables.svg" alt="Vegetables"/>
                     </ListItemIcon>
-                    <ListItemText primary="Sent mail" />
+                    <ListItemText primary="Spices and Vegetables" />
                   </ListItemButton>
                 </List>
               </div>
