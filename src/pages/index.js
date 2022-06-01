@@ -32,7 +32,7 @@ const Index = () => {
       <Root>
         <Section1>
           <Grid container alignItems="stretch">
-            <Grid item xs={12} md={2}>
+            <Grid item xs={12} md={3}>
               <div className="categories">
                 <List
                   component="nav"
