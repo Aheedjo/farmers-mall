@@ -1,4 +1,4 @@
-import { Grid, List, ListSubheader } from '@mui/material';
+import { Grid, List, ListItemButton, ListItemIcon, ListItemText, ListSubheader } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Layout from "../components/Layout";
 
@@ -42,7 +42,12 @@ const Index = () => {
                     </ListSubheader>
                   }
                 >
-
+                  <ListItemButton>
+                    <ListItemIcon>
+                      
+                    </ListItemIcon>
+                    <ListItemText primary="Sent mail" />
+                  </ListItemButton>
                 </List>
               </div>
             </Grid>
