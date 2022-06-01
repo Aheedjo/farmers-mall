@@ -7,26 +7,63 @@ const Root = styled('div')(({ theme }) => ({
 }));
 
 const Section1 = styled('div')(({ theme }) => ({
-  '& .categories': {
+  '& .inner': {
     height: '100%',
+  },
+  '& .categories': {
     background: theme.palette.primary.main,
     borderRadius: '12px',
-    color: theme.colors.textLight,
     padding: '1rem',
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
     
     '& .header': {
       background: 'inherit',
       color: 'white',
       borderRadius: '12px',
-      fontWeight: 500,
+      fontWeight: 600,
       fontSize: '1.1rem'
     },
     '& .list': {
       background: 'inherit',
       borderRadius: '12px',
+      color: theme.colors.textLight,
+      fontWeight: 500,
+    }
+  },
+  '& .sorts': {
+    background: theme.colors.primaryVariant,
+    borderRadius: '12px',
+    padding: '1rem',
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    
+    '& .header': {
+      background: 'inherit',
+      color: 'white',
+      borderRadius: '12px',
+      fontWeight: 600,
+      fontSize: '1.1rem'
+    },
+    '& .list': {
+      background: 'inherit',
+      borderRadius: '12px',
+      color: theme.colors.textLight,
+      fontWeight: 500,
     }
   }
 }));
+
+const CategoryItem = ({ image, title }) => {
+  return (
+    <ListItemButton>
+      <ListItemIcon>
+        <img src={image} alt="Icon"/>
+      </ListItemIcon>
+      <ListItemText primary={title} />
+    </ListItemButton>
+  );
+};
 
 const Index = () => {
   return (
@@ -44,17 +81,39 @@ const Index = () => {
                   component="nav"
                   className="list"
                 >
-                  <ListItemButton>
-                    <ListItemIcon>
-                      <img src="imgs/category_vegetables.svg" alt="Vegetables"/>
-                    </ListItemIcon>
-                    <ListItemText primary="Spices and Vegetables" />
-                  </ListItemButton>
+                  <CategoryItem image="imgs/category_vegetables.svg" title="Spices and Vegetables"/>
+                  <CategoryItem image="imgs/category_fruit_diet.svg" title="Fruit Crops"/>
+                  <CategoryItem image="imgs/category_legume_beans.svg" title="Oil Crops and Legumes"/>
+                  <CategoryItem image="imgs/category_beverages.svg" title="Beverages"/>
+                  <CategoryItem image="imgs/category_root_crops.svg" title="Root and Tuber"/>
+                  <CategoryItem image="imgs/category_cereals.svg" title="Cereals and grains"/>
+                  <CategoryItem image="imgs/category_fish.svg" title="Fisheries and aquaculture"/>
+                  <CategoryItem image="imgs/category_others.svg" title="Others"/>
+                </List>
+              </div>
+
+              <div className="sorts">
+                <Typography className='header' variant="h6" component="div">
+                  Sorted Products
+                </Typography>
+
+                <List
+                  component="nav"
+                  className="list"
+                >
+                  <CategoryItem image="imgs/sort.svg" title="Readily Available Crops"/>
+                  <CategoryItem image="imgs/sort.svg" title="Almost Harvested Crops"/>
+                  <CategoryItem image="imgs/sort.svg" title="Just Planted Crops"/>
+                  <CategoryItem image="imgs/sort.svg" title="Yet to be planted Crops"/>
                 </List>
               </div>
             </Grid>
 
-            <Grid item xs={12} md={8}>
+            <Grid item xs={12} md={6}>
+              
+            </Grid>
+
+            <Grid item xs={12} md={3}>
               
             </Grid>
           </Grid>
