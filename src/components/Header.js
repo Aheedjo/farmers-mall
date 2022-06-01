@@ -7,7 +7,9 @@ import FormikField from "./FormikField";
 import Link from './Link';
 
 const Root = styled('div')(({ theme }) => ({
-  
+  '& .offset':{
+    marginTop: '3rem'
+  },
 }));
 
 const Bar = styled(AppBar)(({ theme }) => ({
@@ -25,9 +27,6 @@ const Bar = styled(AppBar)(({ theme }) => ({
       color: theme.colors.textLight,
       fontWeight: 400,
     }
-  },
-  '& .offset':{
-    ...theme.mixins.toolbar,
   },
   '& .toolbar': {
     padding: '.3rem 5rem',
@@ -276,7 +275,7 @@ const Header = () => {
 
       <Toolbar />
       <Toolbar />
-      <Toolbar />
+      <div className="offset"/>
     </Root>
   );
 };
