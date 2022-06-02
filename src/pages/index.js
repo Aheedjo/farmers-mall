@@ -2,10 +2,9 @@ import { Button, Grid, LinearProgress, List, ListItemButton, ListItemIcon, ListI
 import { styled } from '@mui/material/styles';
 import Layout from "../components/Layout";
 import CustomButton from "../components/CustomButton";
-import { KeyboardArrowLeftRounded, KeyboardArrowRightRounded } from '@mui/icons-material';
+import { FolderOutlined, FolderRounded, KeyboardArrowLeftRounded, KeyboardArrowRightRounded, TimerOutlined, TimerRounded } from '@mui/icons-material';
 import Slider from "react-slick";
 import { useRef } from 'react';
-import { textAlign } from '@mui/system';
 
 const Root = styled('div')(({ theme }) => ({
   
@@ -172,6 +171,10 @@ const Section3 = styled('div')(({ theme }) => ({
 }));
 
 const Section4 = styled('div')(({ theme }) => ({
+  marginTop: '2rem'
+}));
+
+const Section5 = styled('div')(({ theme }) => ({
   marginTop: '2rem'
 }));
 
@@ -502,6 +505,107 @@ const StoreCard = ({ image, title, status, rating, description }) => {
   );
 };
 
+const BlogCard = ({ image, title, type, description }) => {
+  const Root = styled('div')(({ theme }) => ({
+    display: 'inline',
+    width: '100%',
+    background: 'white',
+    borderRadius: '12px',
+    
+    '& .body': {
+      padding: '0 1rem',
+      //margin: '0 1rem',
+      background: 'white',
+      borderRadius: '12px',
+    },
+    '& .image': {
+      width: '100%',
+      height: '290px',
+      //objectFit: 'contain',
+      padding: '0 1rem',
+    },
+    '& .title': {
+      color: 'black',
+      fontWeight: 600,
+      marginBottom: '.2rem',
+    },
+    '& .verified': {
+      width: '30px',
+    },
+    '& .status': {
+      marginTop: '0',
+      fontWeight: 500,
+      color: '#5C615C',
+      fontSize: '.9rem'
+    },
+    '& .icon': {
+      color: '#5C615C',
+    },
+    '& .description': {
+      color: '#5C615C',
+      fontWeight: 500,
+      fontSize: '1rem',
+      marginTop: '.5rem',
+    },
+    '& .rating': {
+      color: theme.palette.primary.main,
+
+      '& .MuiRating-iconEmpty': {
+        color: theme.palette.primary.main,
+      }
+    },
+    '& .moreBtn': {
+      color: '#258D53',
+      textTransform: 'none',
+      fontWeight: 500,
+      fontSize: '1.1rem'
+    }
+  }));
+
+  return (
+    <Root>
+      <img src={image} className="image" alt="Category"/>
+      
+      <div className="body">
+        <Typography className='title' variant="h6">
+          {title}
+        </Typography>
+
+        <div style={{ display: 'flex', alignItems: 'center', columnGap: '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', columnGap: '.3rem' }}>
+            <FolderOutlined className="icon"/>
+            <Typography className='status' variant="body1">
+              {type}
+            </Typography>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', columnGap: '.3rem' }}>
+            <TimerOutlined className="icon"/>
+            <Typography className='status' variant="body1">
+              2days ago
+            </Typography>
+          </div>
+        </div>
+        
+        <Typography className='description' variant="body1">
+          {description}
+        </Typography>
+        
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginTop: '.5rem', }}>
+          <Button 
+            variant="text" 
+            color="primary"
+            className="moreBtn"
+            endIcon={<KeyboardArrowRightRounded color='primary'/>}
+          >
+            Read More...
+          </Button>
+        </div>
+      </div>
+    </Root>
+  );
+};
+
 const Index = () => {
   return (
     <Layout>
@@ -799,6 +903,29 @@ const Index = () => {
             />
           </Carousel>
         </Section4>
+
+        <Section5>
+          <Carousel title="Latest Blogs" slidesToShow={3}>
+            <BlogCard
+              image="imgs/index16.png"
+              title="How best to tackle pests and D..."
+              type="Pests"
+              description="We have listed below six different ways to tackle pests and diseases attacks firstly.."
+            />
+            <BlogCard
+              image="imgs/index17.png"
+              title="Crops that sells the most this..."
+              type="Crops"
+              description="A lot of products has drawn the attention of customers this year and farmers have gained.."
+            />
+            <BlogCard
+              image="imgs/index18.png"
+              title="How to reduce product loss in..."
+              type="Farming"
+              description="Most farmers fall victim of product loss due to some reasons, of which one of them is the lack.."
+            />
+          </Carousel>
+        </Section5>
       </Root>
     </Layout>
   );
