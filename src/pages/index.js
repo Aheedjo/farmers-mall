@@ -171,6 +171,10 @@ const Section3 = styled('div')(({ theme }) => ({
   marginTop: '2rem'
 }));
 
+const Section4 = styled('div')(({ theme }) => ({
+  marginTop: '2rem'
+}));
+
 const CategoryItem = ({ image, title }) => {
   return (
     <ListItemButton>
@@ -182,7 +186,7 @@ const CategoryItem = ({ image, title }) => {
   );
 };
 
-const Carousel = ({ title, children, slidesToShow = 5 }) => {
+const Carousel = ({ title, children, slidesToShow = 5, background = 'inherit', contentPadding = '0' }) => {
   const Root = styled('div')(({ theme }) => ({
     background: 'white',
     borderRadius: '12px',
@@ -203,8 +207,12 @@ const Carousel = ({ title, children, slidesToShow = 5 }) => {
         fontSize: '1.1rem'
       }
     },
+    '& .cover': {
+      padding: contentPadding,
+    },
     '& .slider': {
       position: 'relative',
+      background: background,
 
       '& .content': {
         padding: '0 1rem',
@@ -272,19 +280,21 @@ const Carousel = ({ title, children, slidesToShow = 5 }) => {
         </Button>
       </div>
 
-      <div className='slider'>
-        <div className="slideBtn" onClick={prevSlide}>
-          <KeyboardArrowLeftRounded className='icon'/>
-        </div>
+      <div className='cover'>
+        <div className='slider'>
+          <div className="slideBtn" onClick={prevSlide}>
+            <KeyboardArrowLeftRounded className='icon'/>
+          </div>
 
-        <div className="content">
-          <Slider {...settings} ref={slider}>
-            {children}
-          </Slider>
-        </div>
+          <div className="content">
+            <Slider {...settings} ref={slider}>
+              {children}
+            </Slider>
+          </div>
 
-        <div className="slideBtn next" onClick={nextSlide}>
-          <KeyboardArrowRightRounded className='icon'/>
+          <div className="slideBtn next" onClick={nextSlide}>
+            <KeyboardArrowRightRounded className='icon'/>
+          </div>
         </div>
       </div>
     </Root>
@@ -401,6 +411,92 @@ const ProductCard = ({ image, title, price, measure, seller, progress, status, r
           {status}
         </Typography>
         <Rating className='rating' name="read-only" value={rating} readOnly />
+      </div>
+    </Root>
+  );
+};
+
+const StoreCard = ({ image, title, status, rating, description }) => {
+  const Root = styled('div')(({ theme }) => ({
+    display: 'inline',
+    width: '100%',
+    background: 'white',
+    borderRadius: '12px',
+    
+    '& .body': {
+      padding: '0 1rem',
+      //margin: '0 1rem',
+      background: 'white',
+      borderRadius: '12px',
+    },
+    '& .image': {
+      width: '100%',
+      height: '290px',
+      //objectFit: 'contain',
+      padding: '0 1rem',
+    },
+    '& .title': {
+      color: '#5C615C',
+      fontWeight: 600,
+      marginRight: '.5rem'
+    },
+    '& .verified': {
+      width: '30px',
+    },
+    '& .status': {
+      marginTop: '0',
+      fontWeight: 600
+    },
+    '& .description': {
+      color: '#5C615C',
+      fontWeight: 500,
+      fontSize: '1rem'
+    },
+    '& .rating': {
+      color: theme.palette.primary.main,
+
+      '& .MuiRating-iconEmpty': {
+        color: theme.palette.primary.main,
+      }
+    },
+    '& .moreBtn': {
+      color: '#258D53',
+      textTransform: 'none',
+      fontWeight: 500,
+      fontSize: '1.1rem'
+    }
+  }));
+
+  return (
+    <Root>
+      <img src={image} className="image" alt="Category"/>
+      
+      <div className="body">
+        <div style={{ display: 'flex', alignItems: 'center', marginTop: '.3rem', }}>
+          <Typography className='title' variant="h6">
+            {title}
+          </Typography>
+          <img src="/imgs/verified.svg" className="verified" alt="Verified"/>
+        </div>
+
+        <Typography className='status' variant="body1" color="primary">
+          {status}
+        </Typography>
+        <Typography className='description' variant="body1">
+          {description}
+        </Typography>
+        
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '.5rem', }}>
+          <Rating className='rating' name="read-only" value={rating} readOnly />
+          <Button 
+            variant="text" 
+            color="primary"
+            className="moreBtn"
+            endIcon={<KeyboardArrowRightRounded color='primary'/>}
+          >
+            Visit Store
+          </Button>
+        </div>
       </div>
     </Root>
   );
@@ -656,6 +752,53 @@ const Index = () => {
             />
           </Carousel>
         </Section3>
+
+        <Section4>
+          <Carousel title="All Stores" slidesToShow={3} background='inherit' contentPadding='.5rem'>
+            <StoreCard
+              image="imgs/index13.png"
+              title="Chisom & Sons Farms."
+              status="Maize farmer"
+              description="I plant two types of maize (white and red) and.."
+              rating={4}
+            />
+            <StoreCard
+              image="imgs/index14.png"
+              title="Abdullahi Farms."
+              status="Sorghum farmer"
+              description="I plant red sorghum every year on 12 acre of land..."
+              rating={4}
+            />
+            <StoreCard
+              image="imgs/index15.png"
+              title="Hauwa & family's Farms."
+              status="Rice farmer"
+              description="I plant all sorts of rice on my 12 plots of land.."
+              rating={4}
+            />
+            <StoreCard
+              image="imgs/index13.png"
+              title="Chisom & Sons Farms."
+              status="Maize farmer"
+              description="I plant two types of maize (white and red) and.."
+              rating={4}
+            />
+            <StoreCard
+              image="imgs/index14.png"
+              title="Abdullahi Farms."
+              status="Sorghum farmer"
+              description="I plant red sorghum every year on 12 acre of land..."
+              rating={4}
+            />
+            <StoreCard
+              image="imgs/index15.png"
+              title="Hauwa & family's Farms."
+              status="Rice farmer"
+              description="I plant all sorts of rice on my 12 plots of land.."
+              rating={4}
+            />
+          </Carousel>
+        </Section4>
       </Root>
     </Layout>
   );
