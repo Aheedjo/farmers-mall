@@ -1,4 +1,4 @@
-import { Button, Grid, List, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
+import { Button, Grid, LinearProgress, List, ListItemButton, ListItemIcon, ListItemText, Rating, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Layout from "../components/Layout";
 import CustomButton from "../components/CustomButton";
@@ -167,6 +167,10 @@ const Section2 = styled('div')(({ theme }) => ({
   marginTop: '2rem'
 }));
 
+const Section3 = styled('div')(({ theme }) => ({
+  marginTop: '2rem'
+}));
+
 const CategoryItem = ({ image, title }) => {
   return (
     <ListItemButton>
@@ -209,7 +213,7 @@ const Carousel = ({ title, children, slidesToShow = 5 }) => {
         background: '#0080363B',
         position: 'absolute',
         height: '100%',
-        zIndex: 10000000,
+        zIndex: 1000,
         borderRadius: '4px',
         display: 'inline-flex',
         justifyContent: 'center',
@@ -291,7 +295,6 @@ const CategoryCard = ({ image, title }) => {
   const Root = styled('div')(({ theme }) => ({
     display: 'inline',
     width: '100%',
-    background: 'red',
     textAlign: 'center',
 
     '& img': {
@@ -313,6 +316,92 @@ const CategoryCard = ({ image, title }) => {
       <Typography className='title' variant="h6">
         {title}
       </Typography>
+    </Root>
+  );
+};
+
+const ProductCard = ({ image, title, price, measure, seller, progress, status, rating }) => {
+  const Root = styled('div')(({ theme }) => ({
+    display: 'inline',
+    width: '100%',
+    
+    '& .body': {
+      padding: '0 1rem',
+    },
+    '& img': {
+      width: '100%',
+      height: '290px',
+      //objectFit: 'contain',
+      padding: '0 1rem',
+    },
+    '& .title': {
+      color: '#5C615C',
+      marginTop: '.3rem',
+      fontWeight: 600,
+    },
+    '& .price': {
+      color: 'black',
+      marginTop: '.3rem',
+      fontWeight: 700,
+
+      '& .measure': {
+        color: '#5C615C',
+        fontSize: '1rem',
+        fontWeight: 600,
+      }
+    },
+    '& .seller': {
+      color: '#5C615C',
+      marginTop: '0',
+      fontWeight: 600,
+      fontSize: '1rem'
+    },
+    '& .progress': {
+      boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+      borderRadius: '12px',
+      marginTop: '.8rem',
+      height: '7px',
+
+      '&.MuiLinearProgress-colorPrimary': {
+        background: 'white',
+        border: `2px solid ${theme.palette.primary.main}`
+      }
+    },
+    '& .status': {
+      marginTop: '.2rem',
+      fontWeight: 500
+    },
+    '& .rating': {
+      color: theme.palette.primary.main,
+      marginTop: '.5rem',
+
+      '& .MuiRating-iconEmpty': {
+        color: theme.palette.primary.main,
+      }
+    }
+  }));
+
+  return (
+    <Root>
+      <img src={image} alt="Category"/>
+      
+      <div className="body">
+        <Typography className='title' variant="h6">
+          {title}
+        </Typography>
+        <Typography className='price' variant="h5">
+          N{price}<span className='measure'>/{measure}</span>
+        </Typography>
+        <Typography className='seller' variant="h6">
+          Seller: {seller}
+        </Typography>
+
+        <LinearProgress className="progress" variant="determinate" value={progress} />
+        <Typography className='status' variant="body1" color="primary">
+          {status}
+        </Typography>
+        <Rating className='rating' name="read-only" value={rating} readOnly />
+      </div>
     </Root>
   );
 };
@@ -482,6 +571,91 @@ const Index = () => {
             />
           </Carousel>
         </Section2>
+
+        <Section3>
+          <Carousel title="All Products" slidesToShow={4}>
+            <ProductCard
+              image="imgs/index9.png"
+              title="Yellow Maize"
+              price="9500.00"
+              measure="Bag"
+              seller="Abdullahi Farms."
+              progress={100}
+              status="Harvested and Ready for shipping"
+              rating={4}
+            />
+            <ProductCard
+              image="imgs/index10.png"
+              title="Red Sorghum"
+              price="7500.00"
+              measure="Basket"
+              seller="Tekashi Farms."
+              progress={70}
+              status="About to be harvested"
+              rating={4}
+            />
+            <ProductCard
+              image="imgs/index11.png"
+              title="Tomatoes"
+              price="4500.00"
+              measure="Bag"
+              seller="Thony Moore Farms."
+              progress={50}
+              status="Premature stage"
+              rating={4}
+            />
+            <ProductCard
+              image="imgs/index12.png"
+              title="Yellow Maize"
+              price="6500.00"
+              measure="Basket"
+              seller="Seller: Hajiya fati Farms."
+              progress={10}
+              status="Ready to be planted"
+              rating={4}
+            />
+            <ProductCard
+              image="imgs/index9.png"
+              title="Yellow Maize"
+              price="9500.00"
+              measure="Bag"
+              seller="Abdullahi Farms."
+              progress={100}
+              status="Harvested and Ready for shipping"
+              rating={4}
+            />
+            <ProductCard
+              image="imgs/index10.png"
+              title="Red Sorghum"
+              price="7500.00"
+              measure="Basket"
+              seller="Tekashi Farms."
+              progress={70}
+              status="About to be harvested"
+              rating={4}
+            />
+            <ProductCard
+              image="imgs/index11.png"
+              title="Tomatoes"
+              price="4500.00"
+              measure="Bag"
+              seller="Thony Moore Farms."
+              progress={50}
+              status="Premature stage"
+              rating={4}
+            />
+            <ProductCard
+              image="imgs/index12.png"
+              title="Yellow Maize"
+              price="6500.00"
+              measure="Basket"
+              seller="Seller: Hajiya fati Farms."
+              progress={10}
+              status="Ready to be planted"
+              rating={4}
+            />
+          </Carousel>
+        </Section3>
       </Root>
     </Layout>
   );
