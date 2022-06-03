@@ -1,10 +1,10 @@
+import { FolderOutlined, KeyboardArrowLeftRounded, KeyboardArrowRightRounded, TimerOutlined } from '@mui/icons-material';
 import { Button, Grid, LinearProgress, List, ListItemButton, ListItemIcon, ListItemText, Rating, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import Layout from "../components/Layout";
-import CustomButton from "../components/CustomButton";
-import { FolderOutlined, FolderRounded, KeyboardArrowLeftRounded, KeyboardArrowRightRounded, TimerOutlined, TimerRounded } from '@mui/icons-material';
-import Slider from "react-slick";
 import { useRef } from 'react';
+import Slider from "react-slick";
+import CustomButton from "../components/CustomButton";
+import Layout from "../components/Layout";
 
 const Root = styled('div')(({ theme }) => ({
   
