@@ -1,5 +1,5 @@
-import { KeyboardArrowDownRounded, KeyboardArrowUpRounded, LocationOnRounded, MicRounded } from '@mui/icons-material';
-import { Button, Checkbox, Divider, FormControlLabel, FormGroup, Grid, IconButton, InputAdornment, Menu, MenuItem, Typography } from '@mui/material';
+import { KeyboardArrowDownRounded, KeyboardArrowRightRounded, KeyboardArrowUpRounded, LocationOnRounded, MicRounded } from '@mui/icons-material';
+import { Button, Checkbox, Divider, FormControlLabel, FormGroup, Grid, IconButton, InputAdornment, LinearProgress, Menu, MenuItem, Rating, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Form, Formik } from 'formik';
 import { useState } from 'react';
@@ -39,24 +39,9 @@ const Section1 = styled('div')(({ theme }) => ({
     },
   },
   '& .left': {
-    '& .title': {
-      color: theme.palette.primary.main,
-      fontWeight: 600,
-      marginBottom: '1rem',
-    }
-  },
-  '& .categories': {
-    '& .title': {
-      marginBottom: '1rem',
-    }
-  },
-  '& .location': {
-    marginTop: '2rem',
-
     '& .searchContainer': {
       width: '100%',
-      paddingRight: '2rem',
-
+      
       '& .field': {
         width: '100%',
         '& .MuiOutlinedInput-root': {
@@ -74,7 +59,7 @@ const Section1 = styled('div')(({ theme }) => ({
         },
       },
       '& .field input': {
-        padding: '1rem',
+        padding: '.6rem',
         width: '100%'
       },
       '& .startAdornment': {
@@ -83,6 +68,28 @@ const Section1 = styled('div')(({ theme }) => ({
           padding: 0,
         }
       }
+    },
+
+    '& .title': {
+      color: theme.palette.primary.main,
+      fontWeight: 600,
+      marginBottom: '1rem',
+    }
+  },
+  '& .categories': {
+    '& .title': {
+      marginBottom: '1rem',
+    }
+  },
+  '& .location': {
+    marginTop: '2rem',
+  },
+  '& .price': {
+    marginTop: '2rem',
+
+    '& .btn': {
+      background: theme.palette.primary.main,
+      color: 'white'
     }
   }
 }));
@@ -181,6 +188,105 @@ const LocationIcon = () => {
   );
 };
 
+const ProductCard = ({ image, title, price, measure, seller, progress, status, rating }) => {
+  const Root = styled('div')(({ theme }) => ({
+    //display: 'inline',
+    width: '100%',
+    position: 'relative',
+    
+    '& .body': {
+      padding: '0 1rem',
+      paddingBottom: '2rem',
+    },
+    '& img': {
+      width: '100%',
+      height: '290px',
+      //objectFit: 'contain',
+      padding: '0 1rem',
+    },
+    '& .title': {
+      color: '#5C615C',
+      marginTop: '.3rem',
+      fontWeight: 600,
+    },
+    '& .price': {
+      color: 'white',
+      marginTop: '.3rem',
+      fontWeight: 700,
+      position: 'absolute',
+      top: '-4.5px',
+      right: '15px',
+      background: 'url(imgs/price_bg.png)',
+      backgroundRepeat: 'none',
+      backgroundSize: 'cover',
+      padding: '.2rem .5rem',
+
+      '& .measure': {
+        color: 'white',
+        fontSize: '1rem',
+        fontWeight: 600,
+      }
+    },
+    '& .seller': {
+      color: '#5C615C',
+      marginTop: '0',
+      fontWeight: 600,
+      fontSize: '1rem'
+    },
+    '& .progress': {
+      boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+      borderRadius: '12px',
+      marginTop: '.8rem',
+      height: '7px',
+
+      '&.MuiLinearProgress-colorPrimary': {
+        background: 'white',
+        border: `2px solid ${theme.palette.primary.main}`
+      }
+    },
+    '& .status': {
+      marginTop: '.2rem',
+      fontWeight: 500
+    },
+    '& .rating': {
+      color: theme.palette.primary.main,
+      marginTop: '.5rem',
+
+      '& .MuiRating-iconEmpty': {
+        color: theme.palette.primary.main,
+      }
+    }
+  }));
+
+  return (
+    <Grid item xs={4}>
+      <Root>
+        <Typography className='price' variant="h6">
+          N{price}<span className='measure'>/{measure}</span>
+        </Typography>
+
+        <img src={image} alt="Category"/>
+
+        <div className="body">
+          <Typography className='title' variant="h6">
+            {title}
+          </Typography>
+          
+          <Typography className='seller' variant="h6">
+            Seller: {seller}
+          </Typography>
+
+          <LinearProgress className="progress" variant="determinate" value={progress} />
+          <Typography className='status' variant="body1" color="primary">
+            {status}
+          </Typography>
+          <Rating className='rating' name="read-only" value={rating} readOnly />
+        </div>
+      </Root>
+    </Grid>
+  );
+};
+
 const Products = () => {
   return (
     <Layout>
@@ -196,7 +302,7 @@ const Products = () => {
             </div>
           </div>
 
-          <Grid container>
+          <Grid container spacing={3}>
             <Grid item md={3} className='left'>
               <div className='categories'>
                 <Typography className='title' variant="body1">Categories</Typography>
@@ -212,35 +318,140 @@ const Products = () => {
                 </FormGroup>
               </div>
 
-              <Divider style={{ background: '#008036', height: '1.4px', margin: '1rem 0'}}/>
+              <Divider style={{ background: '#008036', margin: '1rem 0'}}/>
 
               <div className='location'>
                 <Typography className='title' variant="body1">Location</Typography>
 
                 <div className="searchContainer">
-                <Formik
-                  initialValues={{
-                    search: ''
-                  }}
-                >
-                  <Form>
-                    <FormikField
-                      name="search"
-                      variant="outlined"
-                      color="primary"
-                      className="field"
-                      InputProps={{ 
-                        startAdornment: <InputAdornment className="startAdornment" position="start"><LocationIcon/></InputAdornment>,
-                        endAdornment: <InputAdornment className="startAdornment" position="end"><SearchButtons/></InputAdornment>
-                      }}
-                      inputProps={{
-                        placeholder: 'Enter Location'
-                      }}
-                    />
-                  </Form>
-                </Formik>
+                  <Formik
+                    initialValues={{
+                      search: ''
+                    }}
+                  >
+                    <Form>
+                      <FormikField
+                        name="search"
+                        variant="outlined"
+                        color="primary"
+                        className="field"
+                        InputProps={{ 
+                          startAdornment: <InputAdornment className="startAdornment" position="start"><LocationIcon/></InputAdornment>,
+                          endAdornment: <InputAdornment className="startAdornment" position="end"><SearchButtons/></InputAdornment>
+                        }}
+                        inputProps={{
+                          placeholder: 'Enter Location'
+                        }}
+                      />
+                    </Form>
+                  </Formik>
+                </div>
               </div>
+
+              <Divider style={{ background: '#008036', margin: '2rem 0'}}/>
+
+              <div className='price'>
+                <Typography className='title' variant="body1">Price</Typography>
+
+                <div className="searchContainer">
+                  <Formik
+                    initialValues={{
+                      search: ''
+                    }}
+                  >
+                    <Form>
+                      <Grid container justifyContent='space-between' alignItems='center'>
+                        <Grid item xs={4}>
+                          <FormikField
+                            name="search"
+                            variant="outlined"
+                            color="primary"
+                            className="field"
+                            inputProps={{
+                              placeholder: 'Min'
+                            }}
+                          />
+                        </Grid>
+
+                        <Grid item xs={4}>
+                          <FormikField
+                            name="search"
+                            variant="outlined"
+                            color="primary"
+                            className="field"
+                            inputProps={{
+                              placeholder: 'Max'
+                            }}
+                          />
+                        </Grid>
+
+                        <Grid item xs={2}>
+                          <Button color='primary' className='btn'>
+                            <KeyboardArrowRightRounded className='icon'/>
+                          </Button>
+                        </Grid>
+                      </Grid>
+                    </Form>
+                  </Formik>
+                </div>
               </div>
+
+              <Divider style={{ background: '#008036', margin: '2rem 0'}}/>
+
+              <div className='categories'>
+                <Typography className='title' variant="body1">Conditions</Typography>
+                <FormGroup>
+                  <CategoryCheck label='Readily Available Crops'/>
+                  <CategoryCheck label='Almost Harvested Crops' defaultChecked/>
+                  <CategoryCheck label='Just Planted Crops'/>
+                  <CategoryCheck label='Yet To Be Planted Crops'/>
+                </FormGroup>
+              </div>
+            </Grid>
+
+            <Grid item md={9}>
+              <Grid container>
+                <ProductCard
+                  image="imgs/index9.png"
+                  title="Yellow Maize"
+                  price="9500"
+                  measure="Bag"
+                  seller="Abdullahi Farms."
+                  progress={100}
+                  status="Harvested and Ready for shipping"
+                  rating={4}
+                />
+                <ProductCard
+                  image="imgs/index10.png"
+                  title="Red Sorghum"
+                  price="7500"
+                  measure="Basket"
+                  seller="Tekashi Farms."
+                  progress={70}
+                  status="About to be harvested"
+                  rating={4}
+                />
+                <ProductCard
+                  image="imgs/index11.png"
+                  title="Tomatoes"
+                  price="4500"
+                  measure="Bag"
+                  seller="Thony Moore Farms."
+                  progress={50}
+                  status="Premature stage"
+                  rating={4}
+                />
+                <ProductCard
+                  image="imgs/index12.png"
+                  title="Yellow Maize"
+                  price="6500"
+                  measure="Basket"
+                  seller="Seller: Hajiya fati Farms."
+                  progress={10}
+                  status="Ready to be planted"
+                  rating={4}
+                />
+              </Grid>
             </Grid>
           </Grid>
         </Section1>
