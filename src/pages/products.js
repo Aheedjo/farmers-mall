@@ -451,6 +451,46 @@ const Products = () => {
                   status="Ready to be planted"
                   rating={4}
                 />
+                <ProductCard
+                  image="imgs/index9.png"
+                  title="Yellow Maize"
+                  price="9500"
+                  measure="Bag"
+                  seller="Abdullahi Farms."
+                  progress={100}
+                  status="Harvested and Ready for shipping"
+                  rating={4}
+                />
+                <ProductCard
+                  image="imgs/index10.png"
+                  title="Red Sorghum"
+                  price="7500"
+                  measure="Basket"
+                  seller="Tekashi Farms."
+                  progress={70}
+                  status="About to be harvested"
+                  rating={4}
+                />
+                <ProductCard
+                  image="imgs/index11.png"
+                  title="Tomatoes"
+                  price="4500"
+                  measure="Bag"
+                  seller="Thony Moore Farms."
+                  progress={50}
+                  status="Premature stage"
+                  rating={4}
+                />
+                <ProductCard
+                  image="imgs/index12.png"
+                  title="Yellow Maize"
+                  price="6500"
+                  measure="Basket"
+                  seller="Seller: Hajiya fati Farms."
+                  progress={10}
+                  status="Ready to be planted"
+                  rating={4}
+                />
               </Grid>
             </Grid>
           </Grid>
