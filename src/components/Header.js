@@ -4,6 +4,7 @@ import { styled } from "@mui/system";
 import { Form, Formik } from "formik";
 import React, { useState } from "react";
 import FormikField from "./FormikField";
+import { useSpeechToText } from "./hooks";
 import Link from './Link';
 
 const Root = styled('div')(({ theme }) => ({
@@ -170,7 +171,7 @@ const SearchDropdown = () => {
   );
 };
 
-const SearchButtons = () => {
+const SearchButtons = ({ listening, onListen }) => {
   const Root = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -180,17 +181,25 @@ const SearchButtons = () => {
       background: '#E0FFDD',
 
       '&.first': {
-        marginRight: '.8rem'
-      }
+        marginRight: '.8rem',
+        background: listening ? 'red' : '#E0FFDD',
+        color: listening ? 'white' : theme.colors.primaryVariant
+      },
     }
   }));
 
   return (
     <Root>
-      <IconButton className="searchBtn first">
+      <IconButton className="searchBtn first" onClick={() => {
+        if (listening)
+          return;
+
+        if (onListen)
+          onListen();
+      }}>
         <MicRounded/>
       </IconButton>
-      <IconButton className="searchBtn">
+      <IconButton className="searchBtn second" type="submit">
         <SearchRounded/>
       </IconButton>
     </Root>
@@ -198,6 +207,27 @@ const SearchButtons = () => {
 };
 
 const Header = () => {
+  const [search, setSearch] = useState('');
+  const [listening, setListening] = useState(false);
+
+  const speechToText = useSpeechToText();
+
+  const listenToSearch = () => {
+    if (listening)
+      return;
+
+    setListening(true);
+
+    speechToText((text) => {
+      setListening(false);
+      setSearch(text);
+    }, (result) => {
+      setListening(false);
+      console.log(result);
+
+    });
+  };
+
   return (
     <Root>
       <Bar position="fixed" elevation={10}>
@@ -219,8 +249,9 @@ const Header = () => {
             <Grid item xs={12} md={5}>
               <div className="searchContainer">
                 <Formik
+                  enableReinitialize={true}
                   initialValues={{
-                    search: ''
+                    search: search
                   }}
                 >
                   <Form>
@@ -232,7 +263,8 @@ const Header = () => {
                       className="field"
                       InputProps={{ 
                         startAdornment: <InputAdornment className="startAdornment" position="start"><SearchDropdown/></InputAdornment>,
-                        endAdornment: <InputAdornment className="startAdornment" position="end"><SearchButtons/></InputAdornment>
+                        endAdornment: <InputAdornment className="startAdornment" position="end"><SearchButtons 
+                          listening={listening} onListen={listenToSearch}/></InputAdornment>
                       }}
                       inputProps={{
                         placeholder: 'Search products and stores'
