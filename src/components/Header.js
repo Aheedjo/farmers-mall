@@ -3,6 +3,7 @@ import { AppBar, Button, Grid, IconButton, InputAdornment, Menu, MenuItem, Toolb
 import { styled } from "@mui/system";
 import { Form, Formik } from "formik";
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import FormikField from "./FormikField";
 import { useSpeechToText } from "./hooks";
 import Link from './Link';
@@ -131,7 +132,7 @@ const Bar = styled(AppBar)(({ theme }) => ({
   }
 }));
 
-const SearchDropdown = () => {
+const SearchDropdown = ({ onChangeSearchType }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [title, setTitle] = useState('Products');
   const open = Boolean(anchorEl);
@@ -147,6 +148,7 @@ const SearchDropdown = () => {
   const handleClicked = (newTitle) => {
     setTitle(newTitle)
     handleClose();
+    onChangeSearchType(newTitle === 'Articles' ? 'Products' : newTitle);
   };
 
   return (
@@ -164,7 +166,7 @@ const SearchDropdown = () => {
         onClose={handleClose}
       >
         <MenuItem onClick={() => handleClicked('Products')}>Products</MenuItem>
-        <MenuItem onClick={() => handleClicked('Farms')}>Farms</MenuItem>
+        <MenuItem onClick={() => handleClicked('Stores')}>Stores</MenuItem>
         <MenuItem onClick={() => handleClicked('Articles')}>Articles</MenuItem>
       </Menu>
     </div>
@@ -209,8 +211,10 @@ const SearchButtons = ({ listening, onListen }) => {
 const Header = () => {
   const [search, setSearch] = useState('');
   const [listening, setListening] = useState(false);
+  const [searchResultPage, setSearchResultPage] = useState('products');
 
   const speechToText = useSpeechToText();
+  const history = useHistory();
 
   const listenToSearch = () => {
     if (listening)
@@ -220,12 +224,24 @@ const Header = () => {
 
     speechToText((text) => {
       setListening(false);
-      setSearch(text);
+      setSearch(text.replace(/\./g,' '));
     }, (result) => {
       setListening(false);
       console.log(result);
 
     });
+  };
+
+  const onChangeSearchType = (type) => {
+    setSearchResultPage(type.toLowerCase())
+  };
+
+  const doSearch = (values) => {
+    if (values.search && values.search.trim() !== '') {
+      const key = values.search.trim();
+      const url = `/${searchResultPage}?search=${key}`;
+      history.push(url);
+    }
   };
 
   return (
@@ -253,6 +269,8 @@ const Header = () => {
                   initialValues={{
                     search: search
                   }}
+
+                  onSubmit={doSearch}
                 >
                   <Form>
                     <FormikField
@@ -262,7 +280,8 @@ const Header = () => {
                       color="primary"
                       className="field"
                       InputProps={{ 
-                        startAdornment: <InputAdornment className="startAdornment" position="start"><SearchDropdown/></InputAdornment>,
+                        startAdornment: <InputAdornment className="startAdornment" position="start"><SearchDropdown
+                          onChangeSearchType={onChangeSearchType}/></InputAdornment>,
                         endAdornment: <InputAdornment className="startAdornment" position="end"><SearchButtons 
                           listening={listening} onListen={listenToSearch}/></InputAdornment>
                       }}
