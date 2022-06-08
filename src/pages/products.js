@@ -127,8 +127,10 @@ const SortDropdown = () => {
         onClose={handleClose}
       >
         <MenuItem onClick={() => handleClicked('Most Recent')}>Most Recent</MenuItem>
-        <MenuItem onClick={() => handleClicked('Most Recent')}>Most Recent</MenuItem>
-        <MenuItem onClick={() => handleClicked('Most Recent')}>Most Recent</MenuItem>
+        <MenuItem onClick={() => handleClicked('Top Rated')}>Top Rated</MenuItem>
+        <MenuItem onClick={() => handleClicked('Trending')}>Trending</MenuItem>
+        <MenuItem onClick={() => handleClicked('Lowest Price')}>Lowest Price</MenuItem>
+        <MenuItem onClick={() => handleClicked('Highest Price')}>Highest Price</MenuItem>
       </Menu>
     </div>
   );

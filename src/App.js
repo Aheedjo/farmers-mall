@@ -6,6 +6,7 @@ import theme from './themes/default'
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Products from './pages/products';
+import Stores from './pages/stores';
 
 function App() {
   return (
@@ -14,10 +15,12 @@ function App() {
 
       <BrowserRouter>
         <Switch>
+          <Route path='/stores'>
+            <Stores/>
+          </Route>
           <Route path='/products'>
             <Products/>
           </Route>
-
           <Route path='/'>
             <Index/>
           </Route>
