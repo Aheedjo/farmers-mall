@@ -224,7 +224,7 @@ const Header = () => {
 
     speechToText((text) => {
       setListening(false);
-      setSearch(text.replace(/\./g,' '));
+      setSearch(text.replace(/\./g,''));
     }, (result) => {
       setListening(false);
       console.log(result);
@@ -239,7 +239,7 @@ const Header = () => {
   const doSearch = (values) => {
     if (values.search && values.search.trim() !== '') {
       const key = values.search.trim();
-      const url = `/${searchResultPage}?search=${key}`;
+      const url = `/${searchResultPage}?search=${encodeURI(key)}`;
       history.push(url);
     }
   };
