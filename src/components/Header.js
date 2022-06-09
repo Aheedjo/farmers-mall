@@ -3,7 +3,9 @@ import { AppBar, Button, Grid, IconButton, InputAdornment, Menu, MenuItem, Toolb
 import { styled } from "@mui/system";
 import { Form, Formik } from "formik";
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import FormikField from "./FormikField";
+import { useSpeechToText } from "./hooks";
 import Link from './Link';
 
 const Root = styled('div')(({ theme }) => ({
@@ -16,7 +18,7 @@ const Bar = styled(AppBar)(({ theme }) => ({
   ...theme.appBar,
   backgroundImage: 'url(/imgs/background.png)',
   backgroundSize: 'cover',
-  boxShadow: 'rgba(149, 157, 165, 0.2) 0px 0px 4px',
+  boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
 
   '& .info': {
     background: theme.colors.primaryVariant,
@@ -29,7 +31,7 @@ const Bar = styled(AppBar)(({ theme }) => ({
     }
   },
   '& .toolbar': {
-    padding: '.3rem 5rem',
+    padding: '.3rem 3rem',
     [theme.breakpoints.down('sm')]: {
       padding: '.8rem 1rem',
     },
@@ -130,7 +132,7 @@ const Bar = styled(AppBar)(({ theme }) => ({
   }
 }));
 
-const SearchDropdown = () => {
+const SearchDropdown = ({ onChangeSearchType }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [title, setTitle] = useState('Products');
   const open = Boolean(anchorEl);
@@ -146,6 +148,7 @@ const SearchDropdown = () => {
   const handleClicked = (newTitle) => {
     setTitle(newTitle)
     handleClose();
+    onChangeSearchType(newTitle === 'Articles' ? 'Products' : newTitle);
   };
 
   return (
@@ -163,14 +166,14 @@ const SearchDropdown = () => {
         onClose={handleClose}
       >
         <MenuItem onClick={() => handleClicked('Products')}>Products</MenuItem>
-        <MenuItem onClick={() => handleClicked('Farms')}>Farms</MenuItem>
+        <MenuItem onClick={() => handleClicked('Stores')}>Stores</MenuItem>
         <MenuItem onClick={() => handleClicked('Articles')}>Articles</MenuItem>
       </Menu>
     </div>
   );
 };
 
-const SearchButtons = () => {
+const SearchButtons = ({ listening, onListen }) => {
   const Root = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -180,17 +183,25 @@ const SearchButtons = () => {
       background: '#E0FFDD',
 
       '&.first': {
-        marginRight: '.8rem'
-      }
+        marginRight: '.8rem',
+        background: listening ? 'red' : '#E0FFDD',
+        color: listening ? 'white' : theme.colors.primaryVariant
+      },
     }
   }));
 
   return (
     <Root>
-      <IconButton className="searchBtn first">
+      <IconButton className="searchBtn first" onClick={() => {
+        if (listening)
+          return;
+
+        if (onListen)
+          onListen();
+      }}>
         <MicRounded/>
       </IconButton>
-      <IconButton className="searchBtn">
+      <IconButton className="searchBtn second" type="submit">
         <SearchRounded/>
       </IconButton>
     </Root>
@@ -198,6 +209,41 @@ const SearchButtons = () => {
 };
 
 const Header = () => {
+  const [search, setSearch] = useState('');
+  const [listening, setListening] = useState(false);
+  const [searchResultPage, setSearchResultPage] = useState('products');
+
+  const speechToText = useSpeechToText();
+  const history = useHistory();
+
+  const listenToSearch = () => {
+    if (listening)
+      return;
+
+    setListening(true);
+
+    speechToText((text) => {
+      setListening(false);
+      setSearch(text.replace(/\./g,''));
+    }, (result) => {
+      setListening(false);
+      console.log(result);
+
+    });
+  };
+
+  const onChangeSearchType = (type) => {
+    setSearchResultPage(type.toLowerCase())
+  };
+
+  const doSearch = (values) => {
+    if (values.search && values.search.trim() !== '') {
+      const key = values.search.trim();
+      const url = `/${searchResultPage}?search=${encodeURI(key)}`;
+      history.push(url);
+    }
+  };
+
   return (
     <Root>
       <Bar position="fixed" elevation={10}>
@@ -219,9 +265,12 @@ const Header = () => {
             <Grid item xs={12} md={5}>
               <div className="searchContainer">
                 <Formik
+                  enableReinitialize={true}
                   initialValues={{
-                    search: ''
+                    search: search
                   }}
+
+                  onSubmit={doSearch}
                 >
                   <Form>
                     <FormikField
@@ -231,8 +280,10 @@ const Header = () => {
                       color="primary"
                       className="field"
                       InputProps={{ 
-                        startAdornment: <InputAdornment className="startAdornment" position="start"><SearchDropdown/></InputAdornment>,
-                        endAdornment: <InputAdornment className="startAdornment" position="end"><SearchButtons/></InputAdornment>
+                        startAdornment: <InputAdornment className="startAdornment" position="start"><SearchDropdown
+                          onChangeSearchType={onChangeSearchType}/></InputAdornment>,
+                        endAdornment: <InputAdornment className="startAdornment" position="end"><SearchButtons 
+                          listening={listening} onListen={listenToSearch}/></InputAdornment>
                       }}
                       inputProps={{
                         placeholder: 'Search products and stores'

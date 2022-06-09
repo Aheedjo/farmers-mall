@@ -14,7 +14,7 @@ const Layout = ({
   children,
 }) => {
   const ContentWrap = styled('div')(({ theme }) => ({
-    padding: allowContentPadding ? '0 5rem' : '',
+    padding: allowContentPadding ? '0 3rem' : '',
     paddingBottom: showFooter ? '35rem' : '0',
     [theme.breakpoints.only('xs')]: {
       padding: allowContentPadding ? '0 1rem' : '',
