@@ -5,11 +5,11 @@ import { styled } from '@mui/material/styles';
 import Slider from "react-slick";
 import CustomButton from "../components/CustomButton";
 import Layout from "../components/Layout";
-import { getProductsByStoreId, getAllStores } from '../api/store';
+import { getProductsByStoreId, getAllStores, getStoresByUserId } from '../api/store';
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from '../firebaseConfig';
-
-// import Link from './Link';
+import Link from '../components/Link';
+import { useHistory } from 'react-router-dom';
 
 const Root = styled('div')(({ theme }) => ({
   
@@ -278,14 +278,16 @@ export const Carousel = ({ title, children, slidesToShow = 5, background = 'inhe
     <Root>
       <div className="header">
         <Typography className='title' variant="h6">{title}</Typography>
-        <Button 
-          variant="text" 
-          color="primary"
-          className="moreBtn"
-          endIcon={<KeyboardArrowRightRounded color='primary'/>}
-        >
-          See more
-        </Button>
+        <Link href="/stores">
+          <Button 
+            variant="text" 
+            color="primary"
+            className="moreBtn"
+            endIcon={<KeyboardArrowRightRounded color='primary'/>}
+          >
+            See more
+          </Button>
+        </Link>
       </div>
 
       <div className='cover'>
@@ -410,10 +412,6 @@ export const ProductCard = ({ image, title, price, measure, seller, progress, st
         <Typography className='price' variant="h5">
           N{price}<span className='measure'>/{measure}</span>
         </Typography>
-        <Typography className='seller' variant="h6">
-          Seller: {seller}
-        </Typography>
-
         <LinearProgress className="progress" variant="determinate" value={progress} />
         <Typography className='status' variant="body1" color="primary">
           {status}
@@ -424,83 +422,83 @@ export const ProductCard = ({ image, title, price, measure, seller, progress, st
   );
 };
 
-const StoreCard = ({ image, title, status, rating, description }) => {
+const StoreCard = ({ image, title, status, rating, description, id }) => {
+  const history = useHistory();
+
   const Root = styled('div')(({ theme }) => ({
     display: 'inline',
     width: '100%',
     background: 'white',
     borderRadius: '12px',
-    
     '& .body': {
       padding: '0 1rem',
-      //margin: '0 1rem',
       background: 'white',
       borderRadius: '12px',
     },
     '& .image': {
       width: '100%',
       height: '290px',
-      //objectFit: 'contain',
       padding: '0 1rem',
     },
     '& .title': {
       color: '#5C615C',
       fontWeight: 600,
-      marginRight: '.5rem'
+      marginRight: '.5rem',
     },
     '& .verified': {
       width: '30px',
     },
     '& .status': {
       marginTop: '0',
-      fontWeight: 600
+      fontWeight: 600,
     },
     '& .description': {
       color: '#5C615C',
       fontWeight: 500,
-      fontSize: '1rem'
+      fontSize: '1rem',
     },
     '& .rating': {
       color: theme.palette.primary.main,
-
       '& .MuiRating-iconEmpty': {
         color: theme.palette.primary.main,
-      }
+      },
     },
     '& .moreBtn': {
       color: '#258D53',
       textTransform: 'none',
       fontWeight: 500,
-      fontSize: '1.1rem'
-    }
+      fontSize: '1.1rem',
+    },
   }));
+
+  const handleVisitStoreClick = () => {
+    history.push(`/store/${id}`);
+  };
 
   return (
     <Root>
-      <img src={image} className="image" alt="Category"/>
-      
+      <img src={image} className="image" alt="Store" />
       <div className="body">
-        <div style={{ display: 'flex', alignItems: 'center', marginTop: '.3rem', }}>
-          <Typography className='title' variant="h6">
+        <div style={{ display: 'flex', alignItems: 'center', marginTop: '.3rem' }}>
+          <Typography className="title" variant="h6">
             {title}
           </Typography>
-          <img src="/imgs/verified.svg" className="verified" alt="Verified"/>
+          <img src="/imgs/verified.svg" className="verified" alt="Verified" />
         </div>
-
-        <Typography className='status' variant="body1" color="primary">
+        <Typography className="status" variant="body1" color="primary">
           {status}
         </Typography>
-        <Typography className='description' variant="body1">
+        <Typography className="description" variant="body1">
           {description}
         </Typography>
-        
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '.5rem', }}>
-          <Rating className='rating' name="read-only" value={rating} readOnly />
-          <Button 
-            variant="text" 
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '.5rem' }}>
+          <Rating className="rating" name="read-only" value={rating} readOnly />
+          <Button
+            variant="text"
             color="primary"
             className="moreBtn"
-            endIcon={<KeyboardArrowRightRounded color='primary'/>}
+            endIcon={<KeyboardArrowRightRounded color="primary" />}
+            onClick={handleVisitStoreClick}
           >
             Visit Store
           </Button>
@@ -510,7 +508,7 @@ const StoreCard = ({ image, title, status, rating, description }) => {
   );
 };
 
-const Index = () => {
+const DashboardPage = () => {
   const [user, setUser] = useState(null);
   const [products, setProducts] = useState([]);
   const [stores, setStores] = useState([]);
@@ -528,8 +526,9 @@ const Index = () => {
 
   const fetchStores = async () => {
     try {
-      const storeData = await getAllStores();
+      const storeData = await getStoresByUserId();
       setStores(storeData);
+      console.log(storeData)
     } catch (error) {
       console.error('Error fetching stores:', error);
     }
@@ -554,120 +553,16 @@ const Index = () => {
   return (
     <Layout>
       <Root>
-        <Section1>
-          <Grid width="100%" container alignItems="stretch" spacing={1}>
-            <Grid item xs={12} md={8}>
-              <div className='middle'>
-                <Grid container alignItems="stretch" style={{ height: '100%' }}>
-                  <Grid item md={5}></Grid>
-                  <Grid item md={7}>
-                    <div className='inner'>
-                      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                        <div style={{ paddingLeft: '8rem', paddingTop: '50%' }}>
-                          <Typography className='title' variant="h3" component="div">
-                            ARE YOU A FARMER?
-                          </Typography>
-                          <Typography className='subtitle' variant="h6" component="div">
-                            You can bring your local presence online
-                          </Typography>
-                        </div>
-
-                        <div style={{ flex: 1 }}/>
-
-                        <div className='btns'>
-                          {/* <Link href="/own-store" className="brand"> */}
-                            <CustomButton 
-                              variant="contained" 
-                              color="secondary" 
-                              className="btnStore"
-                            >
-                              Own a Store
-                            </CustomButton>
-                          {/* </Link> */}
-                          <CustomButton 
-                            variant="contained" 
-                            color="secondary" 
-                            className="btnContact"
-                          >
-                            Contact Us
-                          </CustomButton>
-                        </div>
-                      </div>
-                    </div>
-                  </Grid>
-                </Grid>
-              </div>
-            </Grid>
-
-            <Grid item xs={12} md={4}>
-              <div className='col3'>
-                <div className="plantCard">
-                  <img src="imgs/plant.svg" alt="Plant"/>
-                  <Typography className='title' variant="h6" component="div">
-                    Order a product even before it is harvested.
-                  </Typography>
-
-                  <CustomButton 
-                    variant="contained" 
-                    color="secondary" 
-                    className="btn"
-                  >
-                    Shop Now
-                  </CustomButton>
-                </div>
-                
-                <div className="shopCard">
-                  <img src="imgs/shop.svg" alt="Plant"/>
-                  <Typography className='title' variant="h6" component="div">
-                    Start buying  raw and fresh foods directly from your closest farms
-                  </Typography>
-
-                  <CustomButton 
-                    variant="contained" 
-                    color="secondary" 
-                    className="btn"
-                  >
-                    Visit Sores
-                  </CustomButton>
-                </div>
-              </div>
-            </Grid>
-          </Grid>
-        </Section1>
-
-        <Section2>
-          <Carousel title="Store Categories">
-            <CategoryCard
-              image="imgs/index4.png"
-              title="Grains farmers"
-            />
-            <CategoryCard
-              image="imgs/index4.png"
-              title="Grains farmers"
-            />
-            <CategoryCard
-              image="imgs/index4.png"
-              title="Grains farmers"
-            />
-            <CategoryCard
-              image="imgs/index4.png"
-              title="Grains farmers"
-            />
-            <CategoryCard
-              image="imgs/index4.png"
-              title="Grains farmers"
-            />
-          </Carousel>
-        </Section2>
-
+        <Typography className='title' variant="h3" component="div">
+          Your Dashboard
+        </Typography>
         <Section3>
-          <Carousel title="All Products" slidesToShow={4}>
+          <Carousel title="Your Products" slidesToShow={4}>
             <ProductCard
               image="imgs/index9.png"
               title="Yellow Maize"
               price="9500.00"
               measure="Bag"
-              seller="Abdullahi Farms."
               progress={100}
               status="Harvested and Ready for shipping"
               rating={4}
@@ -677,7 +572,6 @@ const Index = () => {
               title="Yellow Maize"
               price="9500.00"
               measure="Bag"
-              seller="Abdullahi Farms."
               progress={100}
               status="Harvested and Ready for shipping"
               rating={4}
@@ -687,7 +581,6 @@ const Index = () => {
               title="Yellow Maize"
               price="9500.00"
               measure="Bag"
-              seller="Abdullahi Farms."
               progress={100}
               status="Harvested and Ready for shipping"
               rating={4}
@@ -697,7 +590,6 @@ const Index = () => {
               title="Yellow Maize"
               price="9500.00"
               measure="Bag"
-              seller="Abdullahi Farms."
               progress={100}
               status="Harvested and Ready for shipping"
               rating={4}
@@ -706,7 +598,7 @@ const Index = () => {
         </Section3>
 
         <Section4>
-          <Carousel title="All Stores" slidesToShow={3} background='inherit' contentPadding='.5rem'>
+          <Carousel title="Your Stores" slidesToShow={3} background='inherit' contentPadding='.5rem'>
             <StoreCard
               image="imgs/index13.png"
               title="Chisom & Sons Farms."
@@ -715,16 +607,16 @@ const Index = () => {
               rating={4}
             />
             <StoreCard
-              image="imgs/index13.png"
+              image="imgs/index12.png"
               title="Chisom & Sons Farms."
               status="Maize farmer"
               description="I plant two types of maize (white and red) and.."
               rating={4}
             />
             <StoreCard
-              image="imgs/index13.png"
-              title="Chisom & Sons Farms."
-              status="Maize farmer"
+              image="imgs/index11.png"
+              title="A Domadoes."
+              status="Tomato farmer"
               description="I plant two types of maize (white and red) and.."
               rating={4}
             />
@@ -735,4 +627,4 @@ const Index = () => {
   );
 };
 
-export default Index
+export default DashboardPage

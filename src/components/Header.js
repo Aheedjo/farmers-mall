@@ -1,15 +1,16 @@
-import { KeyboardArrowDownRounded, KeyboardArrowUpRounded, MicRounded, SearchRounded } from "@mui/icons-material";
-import { AppBar, Button, Grid, IconButton, InputAdornment, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
+import { KeyboardArrowDownRounded, KeyboardArrowUpRounded } from "@mui/icons-material";
+import { AppBar, Button, InputAdornment, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import { Form, Formik } from "formik";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import FormikField from "./FormikField";
-import { useSpeechToText } from "./hooks";
+import { auth } from '../firebaseConfig';
+import { onAuthStateChanged } from "firebase/auth";
 import Link from './Link';
 
 const Root = styled('div')(({ theme }) => ({
-  '& .offset':{
+  '& .offset': {
     marginTop: '3rem'
   },
 }));
@@ -40,19 +41,20 @@ const Bar = styled(AppBar)(({ theme }) => ({
       padding: '1.5rem 3rem',
     },
 
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+
+    '& .brand': {
+      display: 'inline-flex',
+      alignItems: 'center',
+    },
+
     '& .right': {
       display: 'flex',
       alignItems: 'center',
     },
-    '& .brand': {
-      display: 'inline-flex',
-      alignItems: 'center',
 
-      '& .brand-text': {
-        color: '#3C4566',
-        marginLeft: '.5rem',
-      }
-    },
     '& .logo': {
       width: '140px',
       height: 'auto',
@@ -60,47 +62,12 @@ const Bar = styled(AppBar)(({ theme }) => ({
         width: '60px',
       },
     },
-    '& .links': {
-      display: 'flex',
-      columnGap: '1.5rem',
-      alignItems: 'center',
-    },
-    '& .link': {
-      color: theme.colors.textDark,
-      fontWeight: 400,
-      transition: '.2s ease',
-      display: 'inline-flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      columnGap: '.5rem',
 
-      '& .icon': {
-        width: '30px',
-      },
-      '&:hover': {
-        transition: '.2s ease',
-        color: theme.palette.primary.main
-      },
-      '&.active': {
-        transition: '.2s ease',
-        color: theme.palette.primary.main
-      }
-    },
-    '& .btn': {
-      textTransform: 'none',
-      marginLeft: '2rem',
-      fontWeight: 500,
-      boxShadow: 'none',
-      padding: '.4rem 1.1rem',
-      borderRadius: '39px',
-      fontSize: '.9rem',
-      [theme.breakpoints.only('sm')]: {
-        width: '40%',
-      },
-    },
     '& .searchContainer': {
-      width: '100%',
-      paddingRight: '2rem',
+      flexGrow: 1,
+      margin: '0 2rem',
+      display: 'flex',
+      alignItems: 'center',
 
       '& .field': {
         width: '100%',
@@ -128,7 +95,48 @@ const Bar = styled(AppBar)(({ theme }) => ({
           padding: 0,
         }
       }
-    }
+    },
+
+    '& .links': {
+      display: 'flex',
+      columnGap: '1.5rem',
+      alignItems: 'center',
+    },
+
+    '& .link': {
+      color: theme.colors.textDark,
+      fontWeight: 400,
+      transition: '.2s ease',
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      columnGap: '.5rem',
+
+      '& .icon': {
+        width: '30px',
+      },
+      '&:hover': {
+        transition: '.2s ease',
+        color: theme.palette.primary.main
+      },
+      '&.active': {
+        transition: '.2s ease',
+        color: theme.palette.primary.main
+      }
+    },
+
+    '& .btn': {
+      textTransform: 'none',
+      marginLeft: '1.5rem',
+      fontWeight: 500,
+      boxShadow: 'none',
+      padding: '.4rem 1.1rem',
+      borderRadius: '39px',
+      fontSize: '.9rem',
+      [theme.breakpoints.only('sm')]: {
+        width: '40%',
+      },
+    },
   }
 }));
 
@@ -146,7 +154,7 @@ const SearchDropdown = ({ onChangeSearchType }) => {
   };
 
   const handleClicked = (newTitle) => {
-    setTitle(newTitle)
+    setTitle(newTitle);
     handleClose();
     onChangeSearchType(newTitle === 'Articles' ? 'Products' : newTitle);
   };
@@ -156,7 +164,7 @@ const SearchDropdown = ({ onChangeSearchType }) => {
       <Button
         onClick={handleClick}
         className="searchPathBtn"
-        endIcon={open ? <KeyboardArrowUpRounded/> : <KeyboardArrowDownRounded/>}
+        endIcon={open ? <KeyboardArrowUpRounded /> : <KeyboardArrowDownRounded />}
       >
         {title}
       </Button>
@@ -173,67 +181,23 @@ const SearchDropdown = ({ onChangeSearchType }) => {
   );
 };
 
-const SearchButtons = ({ listening, onListen }) => {
-  const Root = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-
-    '& .searchBtn': {
-      color: theme.colors.primaryVariant,
-      background: '#E0FFDD',
-
-      '&.first': {
-        marginRight: '.8rem',
-        background: listening ? 'red' : '#E0FFDD',
-        color: listening ? 'white' : theme.colors.primaryVariant
-      },
-    }
-  }));
-
-  return (
-    <Root>
-      <IconButton className="searchBtn first" onClick={() => {
-        if (listening)
-          return;
-
-        if (onListen)
-          onListen();
-      }}>
-        <MicRounded/>
-      </IconButton>
-      <IconButton className="searchBtn second" type="submit">
-        <SearchRounded/>
-      </IconButton>
-    </Root>
-  );
-};
-
 const Header = () => {
   const [search, setSearch] = useState('');
-  const [listening, setListening] = useState(false);
   const [searchResultPage, setSearchResultPage] = useState('products');
+  const [user, setUser] = useState(null);
 
-  const speechToText = useSpeechToText();
   const history = useHistory();
 
-  const listenToSearch = () => {
-    if (listening)
-      return;
-
-    setListening(true);
-
-    speechToText((text) => {
-      setListening(false);
-      setSearch(text.replace(/\./g,''));
-    }, (result) => {
-      setListening(false);
-      console.log(result);
-
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
     });
-  };
+
+    return () => unsubscribe();
+  }, []);
 
   const onChangeSearchType = (type) => {
-    setSearchResultPage(type.toLowerCase())
+    setSearchResultPage(type.toLowerCase());
   };
 
   const doSearch = (values) => {
@@ -249,41 +213,34 @@ const Header = () => {
       <Bar position="fixed" elevation={10}>
         <div className="info">
           <Typography variant="body" className="text">
-            Join our community of agricultural value chain stakeholders and get the opportunity to connect with your customers, 
+            Join our community of agricultural value chain stakeholders and get the opportunity to connect with your customers,
             business partners, investors, and other extension workers.
           </Typography>
         </div>
 
         <Toolbar className="toolbar">
-          <Grid container alignItems="center">
-            <Grid item xs={12} md={2}>
-              <Link href="/" className="brand">
-                <img src="/imgs/logo.svg" className="logo" alt="Logo"/>
-              </Link>
-            </Grid>
+          <Link href="/" className="brand">
+            <img src="/imgs/logo.svg" className="logo" alt="Logo" />
+          </Link>
 
-            <Grid item xs={12} md={5}>
+          {user && (
+            <>
               <div className="searchContainer">
                 <Formik
                   enableReinitialize={true}
                   initialValues={{
                     search: search
                   }}
-
                   onSubmit={doSearch}
                 >
                   <Form>
                     <FormikField
                       name="search"
                       variant="outlined"
-                      //label="Search for products and Stores"
-                      color="primary"
                       className="field"
-                      InputProps={{ 
+                      InputProps={{
                         startAdornment: <InputAdornment className="startAdornment" position="start"><SearchDropdown
-                          onChangeSearchType={onChangeSearchType}/></InputAdornment>,
-                        endAdornment: <InputAdornment className="startAdornment" position="end"><SearchButtons 
-                          listening={listening} onListen={listenToSearch}/></InputAdornment>
+                          onChangeSearchType={onChangeSearchType} /></InputAdornment>,
                       }}
                       inputProps={{
                         placeholder: 'Search products and stores'
@@ -292,41 +249,58 @@ const Header = () => {
                   </Form>
                 </Formik>
               </div>
-            </Grid>
 
-            <Grid item xs={12} md={5}>
               <div className="right">
                 <div className="links">
                   <Link href="/cart" className="link">
-                    <img src="/imgs/cart.svg" alt="Cart" className="icon"/>
+                    <img src="/imgs/cart.svg" alt="Cart" className="icon" />
                     <Typography variant="body1">Cart</Typography>
                   </Link>
-
-                  <Link href="/favorites" className="link">
-                    <img src="/imgs/heart.svg" alt="Cart" className="icon"/>
-                    <Typography variant="body1">Favorites</Typography>
+                  <Link href="/dashboard" className="link">
+                    <Typography variant="body1">Dashboard</Typography>
                   </Link>
-
-                  <Link href="/login" label="Login" className="link"/>
-                  <Link href="/register" label="Register" className="link"/>
                 </div>
 
-                <Button 
-                  variant="contained" 
-                  color="primary" 
-                  className="btn"
+                <Link href="/own-store">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disableElevation
+                    className="btn"
+                  >
+                    Own a Store
+                  </Button>
+                </Link>
+                {/* <Link
+                  href="/login"
                 >
-                  Own a Store
-                </Button>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    disableElevation
+                    className="btn"
+                  >
+                    Log out
+                  </Button>
+                </Link> */}
               </div>
-            </Grid>
-          </Grid>
+            </>
+          )}
+
+          {!user && (
+            <div className="links">
+              <Link href="/login" className="link">
+                <Typography variant="body1">Login</Typography>
+              </Link>
+
+              <Link href="/signup" className="link">
+                <Typography variant="body1">Register</Typography>
+              </Link>
+            </div>
+          )}
         </Toolbar>
       </Bar>
-
-      <Toolbar />
-      <Toolbar />
-      <div className="offset"/>
+      <div className="offset" />
     </Root>
   );
 };

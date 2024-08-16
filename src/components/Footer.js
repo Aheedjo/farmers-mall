@@ -22,7 +22,7 @@ const Root = styled('div')(({ theme }) => ({
   },
   '& .body': {
     color: theme.colors.textLight,
-    fontSize: '1.1rem',
+    fontSize: '1rem',
     lineHeight: '33px',
     marginTop: '1.5rem'
   },
@@ -48,7 +48,7 @@ const Root = styled('div')(({ theme }) => ({
   '& .header': {
     fontWeight: 800,
     color: 'white',
-    fontSize: '1.5rem',
+    fontSize: '1.2rem',
     marginBottom: '1.5rem',
   },
   '& .copyright-container': {
@@ -113,7 +113,7 @@ const Footer = () => {
           <Grid item xs={12} sm={6} md={3}>
             <Typography variant="h4" className="header">Location</Typography>
             <Typography variant="body1" className="body">
-              Fagge Local Government Area, Kano State, Nigeria
+              ABU Zaria, Kaduna
             </Typography>
           </Grid>
 
@@ -121,7 +121,6 @@ const Footer = () => {
             <Typography variant="h4" className="header">Quick Links</Typography>
 
             <FooterLink href="/" label="Home"/>
-            <FooterLink href="/blog" label="Blog"/>
             <FooterLink href="/contact" label="Contact Us"/>
           </Grid>
 

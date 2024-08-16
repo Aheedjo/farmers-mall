@@ -1,12 +1,19 @@
 import React from 'react';
-import { CssBaseline, ThemeProvider } from '@mui/material'
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
-import Index from './pages'
-import theme from './themes/default'
+import { CssBaseline, ThemeProvider } from '@mui/material';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import theme from './themes/default';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import PrivateRoute from './services/authGuard';
 import Products from './pages/products';
 import Stores from './pages/stores';
+import LoginPage from './pages/login';
+import SignUp from './pages/signup';
+import OwnStorePage from './pages/ownStore';
+import StoreDetailsPage from './pages/storeDetails';
+import Index from './pages';
+import ProductDetailsPage from './pages/ProductDetails';
+import DashboardPage from './pages/dashboard';
 
 function App() {
   return (
@@ -15,19 +22,37 @@ function App() {
 
       <BrowserRouter>
         <Switch>
-          <Route path='/stores'>
-            <Stores/>
+          <PrivateRoute exact path='/stores'>
+            <Stores />
+          </PrivateRoute>
+          <PrivateRoute exact path='/products'>
+            <Products />
+          </PrivateRoute>
+          <Route exact path='/login'>
+            <LoginPage />
           </Route>
-          <Route path='/products'>
-            <Products/>
+          <Route exact path='/signup'>
+            <SignUp />
           </Route>
-          <Route path='/'>
-            <Index/>
-          </Route>
+          <PrivateRoute exact path='/dashboard'>
+            <DashboardPage />
+          </PrivateRoute>
+          <PrivateRoute exact path='/store/:id'>
+            <StoreDetailsPage />
+          </PrivateRoute>
+          <PrivateRoute exact path='/product/:id'>
+            <ProductDetailsPage />
+          </PrivateRoute>
+          <PrivateRoute exact path='/own-store'>
+            <OwnStorePage />
+          </PrivateRoute>
+          <PrivateRoute exact path='/'>
+            <Index />
+          </PrivateRoute>
         </Switch>
       </BrowserRouter>
     </ThemeProvider>
-  )
+  );
 }
 
-export default App
+export default App;
