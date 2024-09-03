@@ -144,7 +144,7 @@ const Footer = () => {
 
       <div className="copyright-container">
         <Typography variant="h6" className="copyright">
-          &copy; {new Date().getFullYear()} FarmersMall - All rights reserved
+          &copy; {new Date().getFullYear()} FarmersMall (Software Engineering II Project) - All rights reserved
         </Typography>
       </div>
     </Root>

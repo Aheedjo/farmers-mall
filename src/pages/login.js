@@ -61,7 +61,7 @@ const LoginForm = styled('div')(({ theme }) => ({
     fontWeight: 600,
     marginTop: '1rem',
     width: '100%',
-  }
+  },
 }));
 
 const LoginPage = () => {
@@ -185,6 +185,12 @@ const LoginPage = () => {
             </Form>
           )}
         </Formik>
+
+        <div className="signupLink">
+          <Typography variant="body2">
+            Don't have an acount yet? <a href="/signup">Sign up</a>
+          </Typography>
+        </div>
       </Root>
     </Layout>
   );

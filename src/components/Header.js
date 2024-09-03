@@ -1,13 +1,30 @@
-import { KeyboardArrowDownRounded, KeyboardArrowUpRounded } from "@mui/icons-material";
-import { AppBar, Button, InputAdornment, Menu, MenuItem, Toolbar, Typography } from "@mui/material";
-import { styled } from "@mui/system";
-import { Form, Formik } from "formik";
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
+import { AppBar, Button, InputAdornment, Menu, MenuItem, Toolbar, Typography, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
+import { KeyboardArrowDownRounded, KeyboardArrowUpRounded } from "@mui/icons-material";
+import { styled } from "@mui/system";
+import { Form, Formik } from "formik";
 import FormikField from "./FormikField";
+import Link from './Link';
 import { auth } from '../firebaseConfig';
 import { onAuthStateChanged } from "firebase/auth";
-import Link from './Link';
+
+// Debounce function to delay updates
+const useDebounce = (value, delay) => {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+};
 
 const Root = styled('div')(({ theme }) => ({
   '& .offset': {
@@ -185,8 +202,10 @@ const Header = () => {
   const [search, setSearch] = useState('');
   const [searchResultPage, setSearchResultPage] = useState('products');
   const [user, setUser] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
 
-  const history = useHistory();
+  const debouncedSearch = useDebounce(search, 300);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -196,16 +215,27 @@ const Header = () => {
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    if (debouncedSearch) {
+      const results = [ // Dummy data for demonstration
+        { id: 1, name: 'Product 1', description: 'Description for Product 1' },
+        { id: 2, name: 'Store 1', description: 'Description for Store 1' },
+        { id: 3, name: 'Article 1', description: 'Description for Article 1' },
+      ];
+
+      setSearchResults(results);
+      setOpenModal(true);
+    } else {
+      setOpenModal(false);
+    }
+  }, [debouncedSearch]);
+
   const onChangeSearchType = (type) => {
     setSearchResultPage(type.toLowerCase());
   };
 
-  const doSearch = (values) => {
-    if (values.search && values.search.trim() !== '') {
-      const key = values.search.trim();
-      const url = `/${searchResultPage}?search=${encodeURI(key)}`;
-      history.push(url);
-    }
+  const handleCloseModal = () => {
+    setOpenModal(false);
   };
 
   return (
@@ -231,7 +261,7 @@ const Header = () => {
                   initialValues={{
                     search: search
                   }}
-                  onSubmit={doSearch}
+                  onSubmit={() => {}}
                 >
                   <Form>
                     <FormikField
@@ -243,7 +273,8 @@ const Header = () => {
                           onChangeSearchType={onChangeSearchType} /></InputAdornment>,
                       }}
                       inputProps={{
-                        placeholder: 'Search products and stores'
+                        placeholder: 'Search products and stores',
+                        onChange: (e) => setSearch(e.target.value)
                       }}
                     />
                   </Form>
@@ -252,12 +283,11 @@ const Header = () => {
 
               <div className="right">
                 <div className="links">
-                  <Link href="/cart" className="link">
-                    <img src="/imgs/cart.svg" alt="Cart" className="icon" />
-                    <Typography variant="body1">Cart</Typography>
-                  </Link>
                   <Link href="/dashboard" className="link">
                     <Typography variant="body1">Dashboard</Typography>
+                  </Link>
+                  <Link href="/login" className="link">
+                    <Typography variant="body1">Logout</Typography>
                   </Link>
                 </div>
 
@@ -265,42 +295,43 @@ const Header = () => {
                   <Button
                     variant="contained"
                     color="primary"
-                    disableElevation
                     className="btn"
                   >
                     Own a Store
                   </Button>
                 </Link>
-                {/* <Link
-                  href="/login"
-                >
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    disableElevation
-                    className="btn"
-                  >
-                    Log out
-                  </Button>
-                </Link> */}
               </div>
             </>
           )}
-
-          {!user && (
-            <div className="links">
-              <Link href="/login" className="link">
-                <Typography variant="body1">Login</Typography>
-              </Link>
-
-              <Link href="/signup" className="link">
-                <Typography variant="body1">Register</Typography>
-              </Link>
-            </div>
-          )}
         </Toolbar>
       </Bar>
+
       <div className="offset" />
+
+      <Dialog
+        open={openModal}
+        onClose={handleCloseModal}
+        fullWidth
+        maxWidth="md"
+      >
+        <DialogTitle>Search Results</DialogTitle>
+        <DialogContent>
+          <div>
+            {searchResults.map(result => (
+              <div key={result.id}>
+                <Typography variant="h6">{result.name}</Typography>
+                <Typography variant="body2">{result.description}</Typography>
+                <hr />
+              </div>
+            ))}
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseModal} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Root>
   );
 };

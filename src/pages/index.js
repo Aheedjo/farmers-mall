@@ -8,8 +8,16 @@ import Layout from "../components/Layout";
 import { getProductsByStoreId, getAllStores } from '../api/store';
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from '../firebaseConfig';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import Link from '../components/Link';
 
-// import Link from './Link';
+const data = {
+  'image':"imgs/index13.png",
+  'title':"Chisom & Sons Farms.",
+  'status':"Maize farmer",
+  'description':"I plant two types of maize (white and red) and..",
+  'rating': 4
+}
 
 const Root = styled('div')(({ theme }) => ({
   
@@ -339,6 +347,12 @@ const CategoryCard = ({ image, title }) => {
 };
 
 export const ProductCard = ({ image, title, price, measure, seller, progress, status, rating }) => {
+  const history = useHistory();
+
+  const handleClick = () => {
+    history.push(`/checkout`);
+  };
+
   const Root = styled('div')(({ theme }) => ({
     display: 'inline',
     width: '100%',
@@ -419,6 +433,15 @@ export const ProductCard = ({ image, title, price, measure, seller, progress, st
           {status}
         </Typography>
         <Rating className='rating' name="read-only" value={rating} readOnly />
+        <Button 
+          variant="text" 
+          color="primary"
+          className="moreBtn"
+          endIcon={<KeyboardArrowRightRounded color='primary'/>}
+          onClick={handleClick}
+        >
+          Order now!
+        </Button>
       </div>
     </Root>
   );
@@ -471,7 +494,8 @@ const StoreCard = ({ image, title, status, rating, description }) => {
       color: '#258D53',
       textTransform: 'none',
       fontWeight: 500,
-      fontSize: '1.1rem'
+      fontSize: '1.1rem',
+      display: 'block'
     }
   }));
 
@@ -496,14 +520,16 @@ const StoreCard = ({ image, title, status, rating, description }) => {
         
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '.5rem', }}>
           <Rating className='rating' name="read-only" value={rating} readOnly />
-          <Button 
-            variant="text" 
-            color="primary"
-            className="moreBtn"
-            endIcon={<KeyboardArrowRightRounded color='primary'/>}
-          >
-            Visit Store
-          </Button>
+          <Link href="/stores">
+            <Button 
+              variant="text" 
+              color="primary"
+              className="moreBtn"
+              endIcon={<KeyboardArrowRightRounded color='primary'/>}
+            >
+              Visit Store
+            </Button>
+          </Link>
         </div>
       </div>
     </Root>
@@ -513,7 +539,9 @@ const StoreCard = ({ image, title, status, rating, description }) => {
 const Index = () => {
   const [user, setUser] = useState(null);
   const [products, setProducts] = useState([]);
-  const [stores, setStores] = useState([]);
+  const [stores, setStores] = useState([
+    data, data
+  ]);
 
   const fetchProducts = async () => {
     try {
@@ -575,7 +603,7 @@ const Index = () => {
                         <div style={{ flex: 1 }}/>
 
                         <div className='btns'>
-                          {/* <Link href="/own-store" className="brand"> */}
+                          <Link href="/own-store" className="brand">
                             <CustomButton 
                               variant="contained" 
                               color="secondary" 
@@ -583,14 +611,16 @@ const Index = () => {
                             >
                               Own a Store
                             </CustomButton>
-                          {/* </Link> */}
-                          <CustomButton 
-                            variant="contained" 
-                            color="secondary" 
-                            className="btnContact"
-                          >
-                            Contact Us
-                          </CustomButton>
+                          </Link>
+                          <Link href="/contact" className="brand">
+                            <CustomButton
+                              variant="contained" 
+                              color="secondary"
+                              className="btnContact"
+                            >
+                              Contact Us
+                            </CustomButton>
+                          </Link>
                         </div>
                       </div>
                     </div>
@@ -607,13 +637,15 @@ const Index = () => {
                     Order a product even before it is harvested.
                   </Typography>
 
-                  <CustomButton 
-                    variant="contained" 
-                    color="secondary" 
-                    className="btn"
-                  >
-                    Shop Now
-                  </CustomButton>
+                  <Link href="/products">
+                    <CustomButton 
+                      variant="contained" 
+                      color="secondary" 
+                      className="btn"
+                    >
+                      View Products
+                    </CustomButton>
+                  </Link>
                 </div>
                 
                 <div className="shopCard">
@@ -622,13 +654,15 @@ const Index = () => {
                     Start buying  raw and fresh foods directly from your closest farms
                   </Typography>
 
-                  <CustomButton 
-                    variant="contained" 
-                    color="secondary" 
-                    className="btn"
-                  >
-                    Visit Sores
-                  </CustomButton>
+                  <Link href="/stores">
+                    <CustomButton 
+                      variant="contained" 
+                      color="secondary" 
+                      className="btn"
+                    >
+                      Visit Sores
+                    </CustomButton>
+                  </Link>
                 </div>
               </div>
             </Grid>
@@ -642,20 +676,20 @@ const Index = () => {
               title="Grains farmers"
             />
             <CategoryCard
-              image="imgs/index4.png"
-              title="Grains farmers"
+              image="imgs/index5.png"
+              title="Cassava farmers"
+            />
+            <CategoryCard
+              image="imgs/index6.png"
+              title="Vegetables farmers"
+            />
+            <CategoryCard
+              image="imgs/index7.png"
+              title="Fruit farmers"
             />
             <CategoryCard
               image="imgs/index4.png"
-              title="Grains farmers"
-            />
-            <CategoryCard
-              image="imgs/index4.png"
-              title="Grains farmers"
-            />
-            <CategoryCard
-              image="imgs/index4.png"
-              title="Grains farmers"
+              title="Tubers farmers"
             />
           </Carousel>
         </Section2>
@@ -663,8 +697,18 @@ const Index = () => {
         <Section3>
           <Carousel title="All Products" slidesToShow={4}>
             <ProductCard
-              image="imgs/index9.png"
+              image="imgs/index7.png"
               title="Yellow Maize"
+              price="9500.00"
+              measure="Bag"
+              seller="Abdullahi Farms."
+              progress={100}
+              status="Harvested and Ready for shipping"
+              rating={2}
+            />
+            <ProductCard
+              image="imgs/index6.png"
+              title="Guava man"
               price="9500.00"
               measure="Bag"
               seller="Abdullahi Farms."
@@ -683,17 +727,7 @@ const Index = () => {
               rating={4}
             />
             <ProductCard
-              image="imgs/index9.png"
-              title="Yellow Maize"
-              price="9500.00"
-              measure="Bag"
-              seller="Abdullahi Farms."
-              progress={100}
-              status="Harvested and Ready for shipping"
-              rating={4}
-            />
-            <ProductCard
-              image="imgs/index9.png"
+              image="imgs/index10.png"
               title="Yellow Maize"
               price="9500.00"
               measure="Bag"
@@ -715,14 +749,15 @@ const Index = () => {
               rating={4}
             />
             <StoreCard
-              image="imgs/index13.png"
+              id="tBCnJx9nI4HrSG7BMnED"
+              image="imgs/index12.png"
               title="Chisom & Sons Farms."
               status="Maize farmer"
               description="I plant two types of maize (white and red) and.."
               rating={4}
             />
             <StoreCard
-              image="imgs/index13.png"
+              image="imgs/index11.png"
               title="Chisom & Sons Farms."
               status="Maize farmer"
               description="I plant two types of maize (white and red) and.."

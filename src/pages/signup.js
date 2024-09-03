@@ -73,6 +73,16 @@ const Root = styled('div')(({ theme }) => ({
       fontWeight: 600,
       textDecoration: 'none',
     }
+  },
+  '& .loginLink': {
+    textAlign: 'center',
+    marginTop: '1rem',
+
+    '& a': {
+      color: theme.palette.primary.main,
+      fontWeight: 600,
+      textDecoration: 'none',
+    }
   }
 }));
 

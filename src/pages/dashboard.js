@@ -340,7 +340,7 @@ const CategoryCard = ({ image, title }) => {
   );
 };
 
-export const ProductCard = ({ image, title, price, measure, seller, progress, status, rating }) => {
+export const ProductCard = ({ image, title, price, measure, progress, status, rating }) => {
   const Root = styled('div')(({ theme }) => ({
     display: 'inline',
     width: '100%',
@@ -351,7 +351,6 @@ export const ProductCard = ({ image, title, price, measure, seller, progress, st
     '& img': {
       width: '100%',
       height: '290px',
-      //objectFit: 'contain',
       padding: '0 1rem',
     },
     '& .title': {
@@ -403,21 +402,23 @@ export const ProductCard = ({ image, title, price, measure, seller, progress, st
 
   return (
     <Root>
-      <img src={image} alt="Category"/>
-      
-      <div className="body">
-        <Typography className='title' variant="h6">
-          {title}
-        </Typography>
-        <Typography className='price' variant="h5">
-          N{price}<span className='measure'>/{measure}</span>
-        </Typography>
-        <LinearProgress className="progress" variant="determinate" value={progress} />
-        <Typography className='status' variant="body1" color="primary">
-          {status}
-        </Typography>
-        <Rating className='rating' name="read-only" value={rating} readOnly />
-      </div>
+      <Link href="/product/0uqRNLABGu4hVg7tYiTr">
+        <img src={image} alt="Category"/>
+        
+        <div className="body">
+          <Typography className='title' variant="h6">
+            {title}
+          </Typography>
+          <Typography className='price' variant="h5">
+            N{price}<span className='measure'>/{measure}</span>
+          </Typography>
+          <LinearProgress className="progress" variant="determinate" value={progress} />
+          <Typography className='status' variant="body1" color="primary">
+            {status}
+          </Typography>
+          <Rating className='rating' name="read-only" value={rating} readOnly />
+        </div>
+      </Link>
     </Root>
   );
 };
@@ -524,11 +525,11 @@ const DashboardPage = () => {
     }
   };
 
-  const fetchStores = async () => {
+  const fetchStores = async (id) => {
     try {
-      const storeData = await getStoresByUserId();
-      setStores(storeData);
+      const storeData = await getStoresByUserId(id);
       console.log(storeData)
+      setStores(storeData);
     } catch (error) {
       console.error('Error fetching stores:', error);
     }
@@ -537,7 +538,6 @@ const DashboardPage = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
-      console.log(currentUser)
     });
 
     return () => unsubscribe();
@@ -546,7 +546,7 @@ const DashboardPage = () => {
   useEffect(() => {
     if (user) {
       fetchProducts();
-      fetchStores();
+      fetchStores(user.id);
     }
   }, [])
 
@@ -556,50 +556,30 @@ const DashboardPage = () => {
         <Typography className='title' variant="h3" component="div">
           Your Dashboard
         </Typography>
-        <Section3>
-          <Carousel title="Your Products" slidesToShow={4}>
-            <ProductCard
-              image="imgs/index9.png"
-              title="Yellow Maize"
-              price="9500.00"
-              measure="Bag"
-              progress={100}
-              status="Harvested and Ready for shipping"
-              rating={4}
-            />
-            <ProductCard
-              image="imgs/index9.png"
-              title="Yellow Maize"
-              price="9500.00"
-              measure="Bag"
-              progress={100}
-              status="Harvested and Ready for shipping"
-              rating={4}
-            />
-            <ProductCard
-              image="imgs/index9.png"
-              title="Yellow Maize"
-              price="9500.00"
-              measure="Bag"
-              progress={100}
-              status="Harvested and Ready for shipping"
-              rating={4}
-            />
-            <ProductCard
-              image="imgs/index9.png"
-              title="Yellow Maize"
-              price="9500.00"
-              measure="Bag"
-              progress={100}
-              status="Harvested and Ready for shipping"
-              rating={4}
-            />
-          </Carousel>
-        </Section3>
+        <div>
+        <Typography variant="h6" mt={2}>Name</Typography>
+        <Typography>Admin</Typography>
 
+        {/* Mail */}
+        <Typography variant="h6" mt={2}>Mail</Typography>
+        <Typography>admin@mail.com</Typography>
+
+        {/* Contact Number */}
+        <Typography variant="h6" mt={2}>Contact Number</Typography>
+        <Typography>(123) 456-7890</Typography>
+
+        {/* Address */}
+        <Typography variant="h6" mt={2}>Address</Typography>
+        <Typography>123 Admin St, Admin City, AD 12345</Typography>
+
+        {/* Date of Birth */}
+        <Typography variant="h6" mt={2}>Date of Birth</Typography>
+        <Typography>January 1, 1970</Typography>
+        </div>
         <Section4>
           <Carousel title="Your Stores" slidesToShow={3} background='inherit' contentPadding='.5rem'>
             <StoreCard
+              id="tBCnJx9nI4HrSG7BMnED"
               image="imgs/index13.png"
               title="Chisom & Sons Farms."
               status="Maize farmer"
@@ -607,21 +587,82 @@ const DashboardPage = () => {
               rating={4}
             />
             <StoreCard
+              id="rrWNR7bK4y0qQ7LyG62l"
               image="imgs/index12.png"
-              title="Chisom & Sons Farms."
+              title="Odogwu Farms."
               status="Maize farmer"
-              description="I plant two types of maize (white and red) and.."
+              description="I plant all maize (white and red) and.."
               rating={4}
             />
             <StoreCard
-              image="imgs/index11.png"
-              title="A Domadoes."
+              id="nbHZAdUWTDBtGJEaOTuQ"
+              image="imgs/index10.png"
+              title="A class farms."
               status="Tomato farmer"
-              description="I plant two types of maize (white and red) and.."
+              description="Everything dey"
               rating={4}
             />
           </Carousel>
         </Section4>
+        <Section3>
+          <Carousel title="Your Products" slidesToShow={4}>
+          <ProductCard
+            image="imgs/index5.png"
+            title="Organic Yellow Maize - Premium Quality"
+            price="9500.00"
+            measure="Bag"
+            progress={100}
+            status="Harvested and Ready for shipping"
+            rating={4}
+          />
+          <ProductCard
+            image="imgs/index9.png"
+            title="Yellow Maize - Freshly Harvested"
+            price="9200.00"
+            measure="Bag"
+            progress={95}
+            status="In transit to warehouse"
+            rating={5}
+          />
+          <ProductCard
+            image="imgs/index4.png"
+            title="High-Quality Yellow Maize - Grade A"
+            price="9800.00"
+            measure="Bag"
+            progress={90}
+            status="Processing in facility"
+            rating={4}
+          />
+          <ProductCard
+            image="imgs/index16.png"
+            title="Yellow Maize - Harvest 2024"
+            price="9400.00"
+            measure="Bag"
+            progress={85}
+            status="Awaiting packaging"
+            rating={3}
+          />
+          <ProductCard
+            image="imgs/index9.png"
+            title="Select Yellow Maize - Special Offer"
+            price="9000.00"
+            measure="Bag"
+            progress={100}
+            status="Ready for delivery"
+            rating={5}
+          />
+          <ProductCard
+            image="imgs/index18.png"
+            title="Yellow Maize - Bulk Purchase Discount"
+            price="9100.00"
+            measure="Bag"
+            progress={100}
+            status="Available for purchase"
+            rating={4}
+          />
+
+          </Carousel>
+        </Section3>
       </Root>
     </Layout>
   );

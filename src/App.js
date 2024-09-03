@@ -14,6 +14,9 @@ import StoreDetailsPage from './pages/storeDetails';
 import Index from './pages';
 import ProductDetailsPage from './pages/ProductDetails';
 import DashboardPage from './pages/dashboard';
+import CheckoutPage from './pages/CheckoutPage';
+import PaymentPage from './pages/payment';
+import ContactUs from './pages/contactUs';
 
 function App() {
   return (
@@ -46,6 +49,15 @@ function App() {
           <PrivateRoute exact path='/own-store'>
             <OwnStorePage />
           </PrivateRoute>
+          <PrivateRoute exact path='/checkout'>
+            <CheckoutPage />
+          </PrivateRoute>
+          <PrivateRoute exact path='/payment'>
+            <PaymentPage />
+          </PrivateRoute>
+          <Route exact path='/contact'>
+            <ContactUs />
+          </Route>
           <PrivateRoute exact path='/'>
             <Index />
           </PrivateRoute>
